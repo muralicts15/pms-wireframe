@@ -1,0 +1,2760 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PropertyPortal — Add Property</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f0f2f5;
+        --sidebar-bg: #0f1623;
+        --sidebar-text: #8a96aa;
+        --sidebar-active: #ffffff;
+        --radius: 12px;
+        --radius-sm: 8px;
+        --sidebar-bg: #0f1623;
+        --sidebar-text: #8a96aa;
+        --sidebar-active: #ffffff;
+        --sidebar-accent: #3b7bff;
+        --white: #ffffff;
+        --card: #ffffff;
+        --border: #e4e8ef;
+        --text-primary: #131b2e;
+        --text-secondary: #5a6478;
+        --text-muted: #9aa1b1;
+        --accent: #3b7bff;
+        --accent-light: #edf2ff;
+        --green: #22c55e;
+        --green-light: #f0fdf4;
+        --amber: #f59e0b;
+        --amber-light: #fffbeb;
+        --red: #ef4444;
+        --red-light: #fef2f2;
+        --purple: #8b5cf6;
+        --purple-light: #f5f3ff;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06),
+          0 1px 2px rgba(0, 0, 0, 0.04);
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        --radius: 12px;
+        --radius-sm: 8px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        overflow: hidden;
+      }
+
+      /* ─── SIDEBAR ─── */
+/* ═══════════════════════════════════════════════════════
+   CANONICAL SIDEBAR — used across all PropertyPortal pages
+   ═══════════════════════════════════════════════════════ */
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.sidebar-brand {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.sidebar-brand .logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.sidebar-brand h1 { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
+.sidebar-brand span { font-size: 11px; color: var(--sidebar-text); }
+.sidebar-nav { padding: 14px 12px; flex: 1; overflow-y: auto; }
+.nav-label {
+  font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,.2);
+  letter-spacing: 1.2px; text-transform: uppercase;
+  padding: 12px 8px 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px; border-radius: var(--radius-sm);
+  color: var(--sidebar-text); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all .15s;
+  margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+.nav-item.active { background: rgba(59,123,255,.18); color: var(--sidebar-active); }
+.nav-item .icon { width: 18px; height: 18px; opacity: .65; flex-shrink: 0; }
+.nav-item.active .icon { opacity: 1; }
+.nav-badge {
+  margin-left: auto; background: var(--accent);
+  color: #fff; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 20px;
+}
+.nav-badge.amber { background: var(--amber); }
+.nav-badge.green { background: var(--green); }
+.nav-badge.purple { background: var(--purple); }
+
+/* Sub-nav (Appointments children) */
+.nav-sub {
+  margin-left: 28px; margin-top: 2px; margin-bottom: 4px;
+}
+.nav-sub-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  color: rgba(255,255,255,.4); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .15s;
+  margin-bottom: 1px; text-decoration: none;
+}
+.nav-sub-item::before { content: '•'; color: rgba(255,255,255,.2); font-size: 11px; }
+.nav-sub-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+.nav-sub-item.active { background: rgba(59,123,255,.22); color: #fff; font-weight: 600; }
+.nav-sub-item.active::before { color: #fff; }
+
+.sidebar-footer {
+  padding: 14px 12px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.user-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px; border-radius: var(--radius-sm); cursor: pointer;
+}
+.user-card:hover { background: rgba(255,255,255,.06); }
+.avatar {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg,#3b7bff,#6c3bff);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 13px; font-weight: 700;
+  color: #fff; flex-shrink: 0;
+}
+.user-info { flex: 1; overflow: hidden; }
+.user-info .name { font-size: 13px; font-weight: 600; color: #fff; }
+.user-info .role { font-size: 11px; color: var(--sidebar-text); }
+.user-card .dots { color: var(--sidebar-text); font-size: 16px; }
+
+      /* ─── MAIN ─── */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        max-height: 100vh;
+      }
+
+      /* ─── TOPBAR ─── */
+      .topbar {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 0 28px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar-left {
+        flex: 1;
+      }
+      .topbar-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .topbar-title span {
+        font-weight: 400;
+        color: var(--text-secondary);
+        font-size: 13px;
+        margin-left: 8px;
+      }
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .breadcrumb a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .breadcrumb .sep {
+        color: var(--border);
+      }
+      .breadcrumb .current {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        position: relative;
+        transition: background 0.15s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .notif-dot {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 7px;
+        height: 7px;
+        background: var(--red);
+        border-radius: 50%;
+        border: 1.5px solid #fff;
+      }
+
+      .btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .btn:hover {
+        opacity: 0.88;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-outline {
+        background: #fff;
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+      }
+      .btn-green {
+        background: var(--green);
+        color: #fff;
+      }
+      .btn-sm {
+        padding: 7px 14px;
+        font-size: 12px;
+      }
+
+      /* ─── CONTENT ─── */
+      .content {
+        padding: 22px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      /* ─── WIZARD PROGRESS HEADER ─── */
+      .wizard-header {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 22px;
+        box-shadow: var(--shadow-sm);
+      }
+      .wizard-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .wizard-meta-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .wizard-step-badge {
+        background: var(--accent);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+      }
+      .wizard-step-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .wizard-step-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 1px;
+      }
+      .wizard-pct {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: "DM Mono", monospace;
+        white-space: nowrap;
+      }
+
+      /* Step dots */
+      .step-dots {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .step-dot-wrap {
+        display: flex;
+        align-items: center;
+      }
+      .step-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        border: 2px solid var(--border);
+        background: var(--bg);
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .step-dot:hover:not(.active) {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .step-dot.done {
+        background: var(--green-light);
+        border-color: var(--green);
+        color: var(--green);
+      }
+      .step-dot.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+        box-shadow: 0 0 0 3px rgba(59, 123, 255, 0.2);
+      }
+      .step-dot-line {
+        flex: 1;
+        height: 2px;
+        background: var(--border);
+        min-width: 16px;
+        max-width: 40px;
+      }
+      .step-dot-line.done {
+        background: var(--green);
+      }
+
+      .step-dot-tooltip {
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--text-primary);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.15s;
+        z-index: 10;
+      }
+      .step-dot:hover .step-dot-tooltip {
+        opacity: 1;
+      }
+
+      .progress-bar-bg {
+        background: #e8ecf3;
+        border-radius: 20px;
+        height: 4px;
+      }
+      .progress-bar-fill {
+        background: linear-gradient(90deg, var(--accent), #6c3bff);
+        height: 4px;
+        border-radius: 20px;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* ─── STEP PANELS ─── */
+      .step-panel {
+        display: none;
+        animation: fadeIn 0.2s ease;
+      }
+      .step-panel.active {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ─── FORM CARD ─── */
+      .form-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+      }
+      .form-card-header {
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+        background: #f8fafc;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .form-card-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+      .form-card-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .form-card-subtitle {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 1px;
+      }
+      .form-card-body {
+        padding: 20px;
+      }
+
+      /* ─── GRID ─── */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 14px;
+      }
+      .grid-4 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 14px;
+      }
+      .col-span-2 {
+        grid-column: span 2;
+      }
+      .col-span-3 {
+        grid-column: span 3;
+      }
+      .col-span-4 {
+        grid-column: span 4;
+      }
+
+      /* ─── FIELDS ─── */
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      input[type="text"],
+      input[type="number"],
+      input[type="email"],
+      input[type="tel"],
+      input[type="url"],
+      input[type="date"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 8px 11px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text-primary);
+        background: var(--white);
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 123, 255, 0.1);
+      }
+      textarea {
+        height: 78px;
+        resize: vertical;
+        line-height: 1.5;
+      }
+      select {
+        cursor: pointer;
+      }
+      input[type="file"] {
+        padding: 6px 10px;
+        background: var(--bg);
+        font-size: 12px;
+      }
+
+      /* Auto-fill badges */
+      .lbl-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 20px;
+        line-height: 1.4;
+      }
+      .lbl-green {
+        background: var(--green-light);
+        color: #166534;
+      }
+      .lbl-amber {
+        background: var(--amber-light);
+        color: #92400e;
+      }
+      .lbl-blue {
+        background: var(--accent-light);
+        color: #1e40af;
+      }
+
+      /* ─── INFO BOX ─── */
+      .info-box {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        background: var(--accent-light);
+        border: 1px solid #c7d9ff;
+        border-radius: var(--radius-sm);
+        padding: 11px 14px;
+        font-size: 13px;
+        color: #2d5fcc;
+      }
+
+      /* ─── SECTION LABEL ─── */
+      .section-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        margin-top: 4px;
+      }
+      .section-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 18px 0;
+      }
+
+      /* ─── CHECKBOX PILLS ─── */
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .checkbox-pill {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 11px;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s;
+        color: var(--text-secondary);
+        user-select: none;
+      }
+      .checkbox-pill:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .checkbox-pill.checked {
+        background: var(--accent-light);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .checkbox-pill input {
+        display: none;
+      }
+
+      /* ─── RADIO CARDS ─── */
+      .radio-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.15s;
+        margin-bottom: 8px;
+      }
+      .radio-card:hover {
+        border-color: var(--accent);
+        background: #fafcff;
+      }
+      .radio-card.selected {
+        border-color: var(--accent);
+        background: var(--accent-light);
+      }
+      .radio-card input {
+        margin-top: 2px;
+        accent-color: var(--accent);
+      }
+      .radio-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .radio-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* ─── BANK BOX ─── */
+      .bank-box {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px;
+        margin-top: 10px;
+      }
+
+      /* ─── IMAGE UPLOAD ─── */
+      .upload-zone {
+        border: 2px dashed var(--border);
+        border-radius: var(--radius);
+        padding: 28px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #fafbfc;
+        position: relative;
+      }
+      .upload-zone:hover {
+        border-color: var(--accent);
+        background: var(--accent-light);
+      }
+      .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: none;
+        background: none;
+      }
+      .upload-zone-icon {
+        font-size: 30px;
+        margin-bottom: 8px;
+      }
+      .upload-zone-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .upload-zone-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .photo-thumb {
+        position: relative;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        border: 2px solid var(--border);
+        aspect-ratio: 4/3;
+        background: var(--bg);
+      }
+      .photo-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .photo-thumb .hero-tag {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 10px;
+      }
+      .photo-thumb .remove-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+      .photo-thumb:hover .remove-btn {
+        opacity: 1;
+      }
+
+      .upload-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      .upload-controls select {
+        flex: 1;
+      }
+      .upload-controls label {
+        font-size: 12px;
+        white-space: nowrap;
+        min-width: auto;
+      }
+
+      /* ─── CHECKLIST ─── */
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: var(--green-light);
+        border: 1px solid #bbf7d0;
+        border-radius: var(--radius-sm);
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #166534;
+      }
+      .checklist-item.warn {
+        background: var(--amber-light);
+        border-color: #fde68a;
+        color: #92400e;
+      }
+
+      /* ─── SUMMARY ─── */
+      .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .summary-table tr {
+        border-bottom: 1px solid var(--border);
+      }
+      .summary-table tr:last-child {
+        border-bottom: none;
+      }
+      .summary-table td {
+        padding: 10px 14px;
+        vertical-align: top;
+      }
+      .summary-table td:first-child {
+        width: 160px;
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .summary-table td:last-child {
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      /* ─── ISSUE BUTTONS ─── */
+      .issue-buttons {
+        display: flex;
+        gap: 12px;
+      }
+      .issue-btn {
+        flex: 1;
+        padding: 14px 18px;
+        border-radius: var(--radius-sm);
+        border: none;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.15s;
+      }
+      .issue-btn:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+      }
+      .issue-draft {
+        background: #f1f5f9;
+        color: var(--text-primary);
+        border: 1.5px solid var(--border);
+      }
+      .issue-pdf {
+        background: #1e293b;
+        color: #fff;
+      }
+      .issue-sign {
+        background: var(--green);
+        color: #fff;
+      }
+
+      /* ─── WIZARD NAV FOOTER ─── */
+      .wizard-nav {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: var(--shadow-sm);
+      }
+      .wizard-nav-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .wizard-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .step-counter {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: "DM Mono", monospace;
+      }
+
+      /* ─── MAP PLACEHOLDER ─── */
+      .map-placeholder {
+        background: var(--bg);
+        height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        font-size: 13px;
+        border: 1px dashed var(--border);
+        margin-top: 12px;
+      }
+
+      /* ─── AGENT SELECT CARD ─── */
+      .agent-select-wrap {
+        position: relative;
+      }
+      .agent-preview {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--white);
+        margin-top: 8px;
+        font-size: 13px;
+      }
+      .agent-avatar-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .agent-meta-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 13px;
+      }
+      .agent-meta-role {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      /* ─── HIDDEN ─── */
+      .hidden {
+        display: none !important;
+      }
+      .mt-2 {
+        margin-top: 8px;
+      }
+      .mt-3 {
+        margin-top: 12px;
+      }
+      .mono {
+        font-family: "DM Mono", monospace;
+      }
+
+      /* ─── PROFILE BANNER ─── */
+      .profile-banner {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--green-light);
+        border: 1px solid #bbf7d0;
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        margin-bottom: 18px;
+      }
+      .profile-banner-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .profile-banner-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #166534;
+      }
+      .profile-banner-sub {
+        font-size: 12px;
+        color: #166534;
+        opacity: 0.8;
+        margin-top: 2px;
+      }
+      .profile-banner-sub a {
+        color: #166534;
+        font-weight: 600;
+      }
+
+      /* ─── OWNER PROFILE CARD ─── */
+      .owner-profile-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        margin-bottom: 0;
+      }
+      .owner-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b7bff, #6c3bff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .owner-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .owner-company {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 1px;
+        font-weight: 500;
+      }
+      .owner-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 6px;
+      }
+      .owner-meta-item {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      /* ─── READONLY GRID ─── */
+      .readonly-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        margin-top: 14px;
+      }
+      .readonly-field {
+        background: #f8fafc;
+        padding: 12px 14px;
+      }
+      .readonly-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 4px;
+      }
+      .readonly-value {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      /* ─── PROFILE NOTE ─── */
+      .profile-note {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 12px;
+      }
+      .profile-note a {
+        color: var(--accent);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .profile-note a:hover {
+        text-decoration: underline;
+      }
+
+      /* ─── AGENT EMPTY STATE ─── */
+      .agent-empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        border: 2px dashed var(--border);
+        border-radius: var(--radius);
+        margin-top: 16px;
+        background: #fafbfc;
+      }
+
+      /* ─── SAVE ACTIONS ─── */
+      .save-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px 18px;
+      }
+      .save-actions-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .save-actions-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+      .save-actions-right {
+        display: flex;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SIDEBAR                                -->
+    <!-- ═══════════════════════════════════════ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark">
+          <div class="logo-icon">🏠</div>
+          <div>
+            <h1>PropertyPortal</h1>
+            <span>Management System</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main</div>
+        <a class="nav-item active" href="properties.html">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Properties
+        </a>
+        <a class="nav-item " href="appointments.html">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Appointments
+          <span class="nav-badge amber">4</span>
+        </a>
+
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Agents
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          Applications
+          <span class="nav-badge">7</span>
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          Tenancy
+          <span class="nav-badge green">5</span>
+        </a>
+
+        <div class="nav-label" style="margin-top:8px">Reports &amp; Feedback</div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          PCR
+          <span class="nav-badge amber">2</span>
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feedback
+          <span class="nav-badge purple">12</span>
+        </a>
+
+        <div class="nav-label" style="margin-top:8px">Manage</div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Owner Profile
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="avatar">SR</div>
+          <div class="user-info">
+            <div class="name">Sarah Robertson</div>
+            <div class="role">Product Owner</div>
+          </div>
+          <div class="dots">⋯</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MAIN                                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <main class="main">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title">
+            New Tenancy Agreement
+            <span>Create &amp; issue a new agreement</span>
+          </div>
+          <div class="breadcrumb">
+            <a href="properties.html">Properties</a>
+            <span class="sep">›</span>
+            <a href="#">Add Property</a>
+            <span class="sep">›</span>
+            <span class="current" id="breadcrumbStep">Agreement Details</span>
+          </div>
+        </div>
+        <div class="icon-btn">
+          🔔
+          <div class="notif-dot"></div>
+        </div>
+        <div class="icon-btn">⚙️</div>
+        <button class="btn btn-outline btn-sm" onclick="alert('Draft saved!')">
+          Save Draft
+        </button>
+        <button
+          class="btn btn-primary btn-sm"
+          id="topNextBtn"
+          onclick="nextStep()"
+        >
+          Continue →
+        </button>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content">
+        <!-- ─── PROGRESS HEADER ─── -->
+        <div class="wizard-header">
+          <div class="wizard-meta">
+            <div class="wizard-meta-left">
+              <span class="wizard-step-badge" id="stepBadge">Step 1 of 8</span>
+              <div>
+                <div class="wizard-step-name" id="stepName">
+                  Agreement Details
+                </div>
+                <div class="wizard-step-desc" id="stepDesc">
+                  Define the core agreement type, dates and occupancy
+                </div>
+              </div>
+            </div>
+            <span class="wizard-pct" id="stepPct">13% complete</span>
+          </div>
+          <div class="step-dots" id="stepDots"></div>
+          <div class="progress-bar-bg">
+            <div
+              class="progress-bar-fill"
+              id="progressBar"
+              style="width: 13%"
+            ></div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- STEP 1 — Agreement Details             -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="step-panel active" id="panel-0">
+          <div class="form-card">
+            <div class="form-card-header">
+              <div
+                class="form-card-icon"
+                style="background: var(--accent-light)"
+              >
+                📋
+              </div>
+              <div>
+                <div class="form-card-title">Agreement Configuration</div>
+                <div class="form-card-subtitle">
+                  Set the agreement type, dates, and rental terms
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="grid-2">
+                <div class="field">
+                  <label>Agreement Type</label>
+                  <select>
+                    <option>Residential Tenancy</option>
+                    <option>Commercial Tenancy</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Term Type</label>
+                  <select>
+                    <option>Fixed Term</option>
+                    <option>Periodic</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label
+                    >Max Occupants
+                    <span class="lbl-badge lbl-amber"
+                      >🟡 From Application</span
+                    ></label
+                  >
+                  <input type="number" value="2" min="1" />
+                </div>
+                <div class="field">
+                  <label>Listing / Asking Rent (Weekly $)</label>
+                  <input type="number" value="650" placeholder="e.g. 650" />
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="section-label">Lease Duration</div>
+              <div class="grid-3">
+                <div class="field">
+                  <label>Notice Period (days)</label>
+                  <input type="number" value="21" />
+                </div>
+                <div class="field">
+                  <label>Break Lease Fee</label>
+                  <select>
+                    <option>2 Weeks Rent</option>
+                    <option>4 Weeks Rent</option>
+                    <option>6 Weeks Rent</option>
+                    <option>None</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Renewal Option</label>
+                  <select>
+                    <option>Yes — Offered at Expiry</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- STEP 2 — Property Details              -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="step-panel" id="panel-1">
+          <!-- Overview sub-card -->
+          <div class="form-card">
+            <div class="form-card-header">
+              <div class="form-card-icon" style="background: #f0fdf4">🏠</div>
+              <div>
+                <div class="form-card-title">Property Overview</div>
+                <div class="form-card-subtitle">
+                  Address, type, size and configuration
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="info-box">
+                ℹ️ Fields tagged <strong>🟢 Auto</strong> are pre-filled from
+                the Property Master record.
+              </div>
+              <div class="grid-2">
+                <div class="field col-span-2">
+                  <label
+                    >Property Address
+                    <span class="lbl-badge lbl-green">🟢 Auto</span></label
+                  >
+                  <input type="text" value="12 Example Street, Perth WA 6000" />
+                </div>
+                <div class="field">
+                  <label>Suburb</label>
+                  <input type="text" value="Perth" />
+                </div>
+                <div class="field">
+                  <label>Postcode</label>
+                  <input type="text" value="6000" />
+                </div>
+                <div class="field">
+                  <label>State</label>
+                  <select>
+                    <option>WA</option>
+                    <option>NSW</option>
+                    <option>VIC</option>
+                    <option>QLD</option>
+                    <option>SA</option>
+                    <option>TAS</option>
+                    <option>NT</option>
+                    <option>ACT</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Nearest Landmark / Station</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Perth Train Station (500m)"
+                  />
+                </div>
+              </div>
+              <div class="map-placeholder">
+                🗺️ Map preview — auto-generated from address
+              </div>
+
+              <div class="divider"></div>
+              <div class="section-label">Property Specs</div>
+              <div class="grid-4">
+                <div class="field">
+                  <label>Property Type</label>
+                  <select>
+                    <option>Apartment</option>
+                    <option>House</option>
+                    <option>Unit</option>
+                    <option>Townhouse</option>
+                    <option>Studio</option>
+                    <option>Villa</option>
+                    <option>Duplex</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Furnished Status</label>
+                  <select>
+                    <option>Unfurnished</option>
+                    <option>Fully Furnished</option>
+                    <option>Partially Furnished</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Year Built</label>
+                  <input type="number" value="2018" />
+                </div>
+                <div class="field">
+                  <label
+                    >Property ID
+                    <span class="lbl-badge lbl-green">🟢 Auto</span></label
+                  >
+                  <input type="text" value="P-102334" />
+                </div>
+                <div class="field">
+                  <label>Bedrooms</label>
+                  <input type="number" value="2" min="0" />
+                </div>
+                <div class="field">
+                  <label>Bathrooms</label>
+                  <input type="number" value="2" min="0" />
+                </div>
+                <div class="field">
+                  <label>Parking Spaces</label>
+                  <input type="number" value="1" min="0" />
+                </div>
+                <div class="field">
+                  <label>Garage / Carport</label>
+                  <select>
+                    <option>None</option>
+                    <option>Garage</option>
+                    <option>Carport</option>
+                    <option>Both</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Internal Area (m²)</label>
+                  <input type="number" value="82" />
+                </div>
+                <div class="field">
+                  <label>Land Size (m²)</label>
+                  <input
+                    type="number"
+                    value="350"
+                    placeholder="Houses / Lots"
+                  />
+                </div>
+                <div class="field">
+                  <label>Balcony / Outdoor (m²)</label>
+                  <input type="number" value="12" />
+                </div>
+                <div class="field">
+                  <label>Floor Level</label>
+                  <input type="number" value="5" />
+                </div>
+              </div>
+
+              <div class="divider"></div>
+              <div class="section-label">Building Details</div>
+              <div class="grid-4">
+                <div class="field">
+                  <label>Total Floors in Building</label>
+                  <input type="number" value="12" />
+                </div>
+                <div class="field">
+                  <label>Parking Type</label>
+                  <select>
+                    <option>Secure Basement Bay</option>
+                    <option>Open Car Park</option>
+                    <option>Street Parking</option>
+                    <option>Garage</option>
+                    <option>None</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Storage Details</label>
+                  <input type="text" value="Cage B-12 (4 sqm)" />
+                </div>
+                <div class="field">
+                  <label>Strata / Complex Name</label>
+                  <input type="text" placeholder="e.g. The Heights" />
+                </div>
+                <div class="field">
+                  <label>NBN / Internet Type</label>
+                  <select>
+                    <option>NBN (FTTP)</option>
+                    <option>NBN (FTTB)</option>
+                    <option>NBN (FTTN)</option>
+                    <option>NBN (HFC)</option>
+                    <option>No NBN</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Energy Rating</label>
+                  <select>
+                    <option>6-Star</option>
+                    <option>5-Star</option>
+                    <option>4-Star</option>
+                    <option>3-Star</option>
+                    <option>Not Rated</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Lift Access</label>
+                  <select>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Smoke Alarm Compliance</label>
+                  <input type="date" value="2025-12-15" />
+                </div>
+              </div>
+
+              <div class="divider"></div>
+              <div class="section-label">Building Facilities</div>
+              <div class="checkbox-group">
+                <label class="checkbox-pill checked" onclick="togglePill(this)"
+                  ><input type="checkbox" checked />Gym</label
+                >
+                <label class="checkbox-pill checked" onclick="togglePill(this)"
+                  ><input type="checkbox" checked />Pool</label
+                >
+                <label class="checkbox-pill checked" onclick="togglePill(this)"
+                  ><input type="checkbox" checked />Lift</label
+                >
+                <label class="checkbox-pill checked" onclick="togglePill(this)"
+                  ><input type="checkbox" checked />Intercom</label
+                >
+                <label class="checkbox-pill" onclick="togglePill(this)"
+                  ><input type="checkbox" />Concierge</label
+                >
+                <label class="checkbox-pill" onclick="togglePill(this)"
+                  ><input type="checkbox" />Rooftop Terrace</label
+                >
+                <label class="checkbox-pill" onclick="togglePill(this)"
+                  ><input type="checkbox" />BBQ Area</label
+                >
+                <label class="checkbox-pill" onclick="togglePill(this)"
+                  ><input type="checkbox" />Sauna</label
+                >
+                <label class="checkbox-pill" onclick="togglePill(this)"
+                  ><input type="checkbox" />Theatre Room</label
+                >
+                <label class="checkbox-pill" onclick="togglePill(this)"
+                  ><input type="checkbox" />Visitor Parking</label
+                >
+                <label class="checkbox-pill" onclick="togglePill(this)"
+                  ><input type="checkbox" />Electric Vehicle Charging</label
+                >
+                <label class="checkbox-pill" onclick="togglePill(this)"
+                  ><input type="checkbox" />Solar Panels</label
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Details sub-card -->
+          <div class="form-card">
+            <div class="form-card-header">
+              <div
+                class="form-card-icon"
+                style="background: var(--amber-light)"
+              >
+                🔑
+              </div>
+              <div>
+                <div class="form-card-title">Key &amp; Access Details</div>
+                <div class="form-card-subtitle">
+                  Number of keys, fobs and entry instructions
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="grid-4">
+                <div class="field">
+                  <label>Physical Keys Issued</label>
+                  <input type="number" value="2" min="0" />
+                </div>
+                <div class="field">
+                  <label>Key Fobs / Cards Issued</label>
+                  <input type="number" value="1" min="0" />
+                </div>
+                <div class="field">
+                  <label>Garage Remote Issued</label>
+                  <input type="number" value="1" min="0" />
+                </div>
+                <div class="field">
+                  <label>Mailbox Key Issued</label>
+                  <select>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid-2 mt-3">
+                <div class="field">
+                  <label>Lock Type</label>
+                  <select>
+                    <option>Deadbolt</option>
+                    <option>Keypad / Smart Lock</option>
+                    <option>Intercom + Fob</option>
+                    <option>Standard</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Key Return Condition</label>
+                  <select>
+                    <option>All keys must be returned at end of tenancy</option>
+                    <option>Keys may be handed to agency</option>
+                  </select>
+                </div>
+                <div class="field col-span-2">
+                  <label>Entry / Access Instructions</label>
+                  <textarea
+                    placeholder="e.g. Swipe fob at lobby, unit 5B is on Level 5 — lift on the left"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inclusions & Exclusions sub-card -->
+          <div class="form-card">
+            <div class="form-card-header">
+              <div
+                class="form-card-icon"
+                style="background: var(--purple-light)"
+              >
+                📦
+              </div>
+              <div>
+                <div class="form-card-title">Inclusions &amp; Exclusions</div>
+                <div class="form-card-subtitle">
+                  What is and isn't included with the property
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="grid-2">
+                <div class="field">
+                  <label
+                    >Inclusions
+                    <span class="lbl-badge lbl-green">🟢 Auto</span></label
+                  >
+                  <textarea>
+1 car bay, dishwasher, split system aircon</textarea
+                  >
+                </div>
+                <div class="field">
+                  <label>Exclusions</label>
+                  <textarea
+                    placeholder="e.g. Garden shed, freestanding furniture not included"
+                  >
+Garden shed not included</textarea
+                  >
+                </div>
+                <div class="field col-span-2">
+                  <label>Property Description</label>
+                  <textarea style="height: 68px">
+Modern apartment with stunning city views, located in the heart of Perth CBD.</textarea
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Upload sub-card -->
+          <div class="form-card">
+            <div class="form-card-header">
+              <div class="form-card-icon" style="background: #fdf4ff">📸</div>
+              <div>
+                <div class="form-card-title">Property Images</div>
+                <div class="form-card-subtitle">
+                  Upload photos — first image will be set as the hero image
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="upload-zone" id="uploadZone">
+                <input
+                  type="file"
+                  id="photoInput"
+                  multiple
+                  accept="image/*"
+                  onchange="handlePhotos(event)"
+                />
+                <div class="upload-zone-icon">📷</div>
+                <div class="upload-zone-label">
+                  Click or drag photos here to upload
+                </div>
+                <div class="upload-zone-sub">
+                  JPG, PNG, WEBP — Max 10 MB each · Multiple files supported
+                </div>
+              </div>
+              <div class="photo-grid" id="photoGrid"></div>
+              <div id="photoControls" class="upload-controls hidden">
+                <label style="color: var(--text-secondary); font-weight: 600"
+                  >Hero Image:</label
+                >
+                <select id="heroSelect" style="max-width: 260px"></select>
+                <div class="field" style="flex: 1; min-width: 180px">
+                  <label>Floorplan (optional)</label>
+                  <input type="file" accept="image/*,.pdf" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- STEP 3 — Rent & Bond                   -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="step-panel" id="panel-2">
+          <div class="form-card">
+            <div class="form-card-header">
+              <div
+                class="form-card-icon"
+                style="background: var(--green-light)"
+              >
+                💰
+              </div>
+              <div>
+                <div class="form-card-title">Rent &amp; Bond</div>
+                <div class="form-card-subtitle">
+                  Weekly rent, bond amount and payment method
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="grid-4">
+                <div class="field">
+                  <label
+                    >Weekly Rent ($)
+                    <span class="lbl-badge lbl-amber"
+                      >🟡 From Application</span
+                    ></label
+                  >
+                  <input type="number" value="600" />
+                </div>
+                <div class="field">
+                  <label
+                    >Security Bond ($)
+                    <span class="lbl-badge lbl-blue"
+                      >🔵 4 Weeks Auto</span
+                    ></label
+                  >
+                  <input type="number" value="2400" />
+                </div>
+                <div class="field">
+                  <label
+                    >Pet Bond ($)
+                    <span class="lbl-badge lbl-blue"
+                      >🔵 System Default</span
+                    ></label
+                  >
+                  <input type="number" value="260" />
+                </div>
+                <div class="field">
+                  <label>Rent Due Day</label>
+                  <select>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                  </select>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="section-label">Payment Method</div>
+              <label class="radio-card selected" onclick="selectRadio(this)">
+                <input type="radio" name="payment" value="bank" checked />
+                <div>
+                  <div class="radio-title">
+                    Bank Transfer — Trust Account
+                    <span class="lbl-badge lbl-green" style="margin-left: 6px"
+                      >🟢 Auto</span
+                    >
+                  </div>
+                  <div class="radio-sub">
+                    Funds deposited directly into agency trust account
+                  </div>
+                </div>
+              </label>
+              <label class="radio-card" onclick="selectRadio(this)">
+                <input type="radio" name="payment" value="cash" />
+                <div>
+                  <div class="radio-title">Cash or Cheque</div>
+                  <div class="radio-sub">
+                    Tenant pays in person at agency office
+                  </div>
+                </div>
+              </label>
+              <div class="bank-box">
+                <div class="grid-2">
+                  <div class="field">
+                    <label>BSB</label>
+                    <input type="text" value="123-456" />
+                  </div>
+                  <div class="field">
+                    <label>Account Number</label>
+                    <input type="text" value="12345678" />
+                  </div>
+                  <div class="field">
+                    <label>Account Name</label>
+                    <input type="text" value="ABC Trust Account" />
+                  </div>
+                  <div class="field">
+                    <label>Payment Reference</label>
+                    <input type="text" value="Address + Tenant Name" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- STEP 4 — Utilities & Water             -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="step-panel" id="panel-3">
+          <div class="form-card">
+            <div class="form-card-header">
+              <div class="form-card-icon" style="background: #f0fdfa">⚡</div>
+              <div>
+                <div class="form-card-title">Utilities &amp; Water</div>
+                <div class="form-card-subtitle">
+                  Metering, responsibility and consumption settings
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="grid-2">
+                <div class="field">
+                  <label
+                    >Electricity Separately Metered?
+                    <span class="lbl-badge lbl-green">🟢 Auto</span></label
+                  >
+                  <select
+                    onchange="toggleSection('elecCalc', this.value, 'No')"
+                  >
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Gas Separately Metered?</label>
+                  <select onchange="toggleSection('gasCalc', this.value, 'No')">
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Water Separately Metered?</label>
+                  <select
+                    onchange="toggleSection('waterCalc', this.value, 'No')"
+                  >
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Internet Responsibility</label>
+                  <select>
+                    <option>Tenant's Responsibility</option>
+                    <option>Owner's Responsibility</option>
+                    <option>Included in Rent</option>
+                  </select>
+                </div>
+              </div>
+              <div id="elecCalc" class="hidden mt-2">
+                <div class="field">
+                  <label>Electricity Calculation Method</label
+                  ><textarea
+                    placeholder="Describe how electricity charges are calculated…"
+                  ></textarea>
+                </div>
+              </div>
+              <div id="gasCalc" class="hidden mt-2">
+                <div class="field">
+                  <label>Gas Calculation Method</label
+                  ><textarea
+                    placeholder="Describe how gas charges are calculated…"
+                  ></textarea>
+                </div>
+              </div>
+              <div id="waterCalc" class="hidden mt-2">
+                <div class="field">
+                  <label>Water Calculation Method</label
+                  ><textarea
+                    placeholder="Describe how water charges are calculated…"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="grid-2 mt-3">
+                <div class="field">
+                  <label
+                    >Water Consumption — Tenant Pays (%)
+                    <span class="lbl-badge lbl-green">🟢 Auto</span></label
+                  >
+                  <input type="number" value="100" min="0" max="100" />
+                </div>
+                <div class="field">
+                  <label>Tenant Can Contact Water Provider?</label>
+                  <select>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- STEP 5 — Pets, Strata & Legal          -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="step-panel" id="panel-4">
+          <div class="form-card">
+            <div class="form-card-header">
+              <div class="form-card-icon" style="background: #fff7ed">🐾</div>
+              <div>
+                <div class="form-card-title">
+                  Pets, Strata &amp; Legal Terms
+                </div>
+                <div class="form-card-subtitle">
+                  Pet approvals, by-laws, and special conditions
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="section-label">🐾 Pet Approval</div>
+              <div class="grid-2">
+                <div class="field">
+                  <label
+                    >Pets Approved?
+                    <span class="lbl-badge lbl-amber"
+                      >🟡 From Application</span
+                    ></label
+                  >
+                  <select
+                    onchange="toggleSection('petsDetail', this.value, 'Yes')"
+                  >
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+              <div id="petsDetail" class="mt-3">
+                <div class="grid-2">
+                  <div class="field">
+                    <label>Pet Type</label>
+                    <input
+                      type="text"
+                      value="Dog"
+                      placeholder="e.g. Dog, Cat"
+                    />
+                  </div>
+                  <div class="field">
+                    <label>Number of Pets</label>
+                    <input type="number" value="1" min="1" />
+                  </div>
+                  <div class="field">
+                    <label>Cleaning / Fumigation Condition</label>
+                    <textarea>
+Professional carpet cleaning required at end of tenancy.</textarea
+                    >
+                  </div>
+                  <div class="field">
+                    <label>Other Pet Conditions</label>
+                    <textarea>
+Pet must not cause nuisance to neighbours.</textarea
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+              <div class="section-label">🏢 Strata By-Laws</div>
+              <div class="grid-2">
+                <div class="field">
+                  <label
+                    >Strata By-Laws Applicable?
+                    <span class="lbl-badge lbl-green">🟢 Auto</span></label
+                  >
+                  <select>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Copy of By-Laws Attached?</label>
+                  <select>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+              <div class="section-label">⚖️ Legal Terms</div>
+              <div class="grid-2">
+                <div class="field">
+                  <label
+                    >Assignment Option
+                    <span class="lbl-badge lbl-green"
+                      >🟢 Office Default</span
+                    ></label
+                  >
+                  <select>
+                    <option>With Consent</option>
+                    <option>Allowed</option>
+                    <option>Not Allowed</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label
+                    >Modification Option
+                    <span class="lbl-badge lbl-green"
+                      >🟢 Office Default</span
+                    ></label
+                  >
+                  <select>
+                    <option>With Consent</option>
+                    <option>Not Allowed</option>
+                  </select>
+                </div>
+                <div class="field col-span-2">
+                  <label
+                    >Additional Terms
+                    <span class="lbl-badge lbl-green">🟢 Template</span></label
+                  >
+                  <textarea>Tenant must maintain lawns and gardens.</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- STEP 6 — Owner Details (from Profile)  -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="step-panel" id="panel-5">
+          <div class="form-card">
+            <div class="form-card-header">
+              <div
+                class="form-card-icon"
+                style="background: var(--accent-light)"
+              >
+                👤
+              </div>
+              <div>
+                <div class="form-card-title">Owner Details</div>
+                <div class="form-card-subtitle">
+                  Auto-populated from Owner Profile — no manual entry required
+                </div>
+              </div>
+              <a
+                href="#"
+                class="profile-link"
+                style="
+                  margin-left: auto;
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: var(--accent);
+                  text-decoration: none;
+                  white-space: nowrap;
+                "
+                >Edit Profile →</a
+              >
+            </div>
+            <div class="form-card-body">
+              <!-- Profile source banner -->
+              <div class="profile-banner">
+                <div class="profile-banner-icon">✅</div>
+                <div>
+                  <div class="profile-banner-title">
+                    Owner Details are populated from your Owner Profile
+                  </div>
+                  <div class="profile-banner-sub">
+                    To update this information, go to
+                    <a href="#">Owner Profile</a> in the sidebar. Changes made
+                    there will reflect here automatically.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Read-only owner card -->
+              <div class="owner-profile-card">
+                <div class="owner-avatar">JS</div>
+                <div class="owner-profile-info">
+                  <div class="owner-name">John Smith</div>
+                  <div class="owner-company">ABC Investments Pty Ltd</div>
+                  <div class="owner-meta-row">
+                    <span class="owner-meta-item">📞 0423 555 789</span>
+                    <span class="owner-meta-item">✉️ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1f757077716c72766b775f78727e7673317c7072">[email&#160;protected]</a></span>
+                    <span class="owner-meta-item"
+                      >📍 25 Lakeview Ave, Perth WA 6000</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+              <div class="section-label">🏦 Bank Details — Disbursements</div>
+
+              <!-- Read-only bank details -->
+              <div class="readonly-grid">
+                <div class="readonly-field">
+                  <div class="readonly-label">Account Name</div>
+                  <div class="readonly-value">John Smith</div>
+                </div>
+                <div class="readonly-field">
+                  <div class="readonly-label">BSB</div>
+                  <div class="readonly-value mono">062-000</div>
+                </div>
+                <div class="readonly-field">
+                  <div class="readonly-label">Account Number</div>
+                  <div class="readonly-value mono">1234 5678</div>
+                </div>
+                <div class="readonly-field">
+                  <div class="readonly-label">TFN / ABN</div>
+                  <div class="readonly-value mono">51 234 567 890</div>
+                </div>
+              </div>
+
+              <div class="profile-note">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                These details are read-only. To make changes, visit
+                <a href="#">Owner Profile → Settings</a>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- STEP 7 — Assign Agent                  -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="step-panel" id="panel-6">
+          <div class="form-card">
+            <div class="form-card-header">
+              <div
+                class="form-card-icon"
+                style="background: var(--green-light)"
+              >
+                🧑‍💼
+              </div>
+              <div>
+                <div class="form-card-title">Assign Agent</div>
+                <div class="form-card-subtitle">
+                  Select a property manager — their details will auto-populate
+                </div>
+              </div>
+              <a
+                href="#"
+                style="
+                  margin-left: auto;
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: var(--accent);
+                  text-decoration: none;
+                  white-space: nowrap;
+                "
+                >+ Add New Agent →</a
+              >
+            </div>
+            <div class="form-card-body">
+              <div class="info-box" style="margin-bottom: 16px">
+                ℹ️ Select an agent from your existing team. To create a new
+                agent, go to <strong>Agents</strong> in the sidebar.
+              </div>
+
+              <div class="field" style="max-width: 420px">
+                <label>Assign Property Manager</label>
+                <select id="agentSelect" onchange="updateAgentPreview(this)">
+                  <option value="">— Select an Agent —</option>
+                  <option value="mp">Murali Prakash</option>
+                  <option value="jw">Jessica Wong</option>
+                  <option value="rl">Ryan Lee</option>
+                  <option value="sk">Sarah Kim</option>
+                </select>
+              </div>
+
+              <!-- Agent profile card - shown after selection -->
+              <div id="agentPreview" class="hidden">
+                <div class="divider"></div>
+                <div class="section-label">Agent Details</div>
+
+                <!-- Banner -->
+                <div class="profile-banner" style="margin-bottom: 16px">
+                  <div class="profile-banner-icon">✅</div>
+                  <div>
+                    <div class="profile-banner-title">
+                      Agent details auto-populated from Agent Profile
+                    </div>
+                    <div class="profile-banner-sub">
+                      To update agent information, go to
+                      <a href="#">Agents</a> in the sidebar.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Agent card -->
+                <div class="owner-profile-card" style="margin-bottom: 16px">
+                  <div
+                    class="owner-avatar"
+                    id="agentAvatarCard"
+                    style="
+                      background: linear-gradient(135deg, #3b7bff, #6c3bff);
+                    "
+                  >
+                    MP
+                  </div>
+                  <div class="owner-profile-info">
+                    <div class="owner-name" id="agentCardName">
+                      Murali Prakash
+                    </div>
+                    <div class="owner-company" id="agentCardRole">
+                      Senior Property Manager
+                    </div>
+                    <div class="owner-meta-row">
+                      <span class="owner-meta-item" id="agentCardPhone"
+                        >📞 0412 345 678</span
+                      >
+                      <span class="owner-meta-item" id="agentCardEmail"
+                        >✉️ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e78a9295868b8ea7979588978295939e8095889297c984888ac98692">[email&#160;protected]</a></span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Read-only auto-populated fields -->
+                <div class="readonly-grid">
+                  <div class="readonly-field">
+                    <div class="readonly-label">Licence Number</div>
+                    <div class="readonly-value mono" id="agentLicence">
+                      RA98231
+                    </div>
+                  </div>
+                  <div class="readonly-field">
+                    <div class="readonly-label">Office Hours</div>
+                    <div class="readonly-value" id="agentHours">
+                      Mon–Fri, 9am–5pm
+                    </div>
+                  </div>
+                  <div class="readonly-field">
+                    <div class="readonly-label">Agency</div>
+                    <div class="readonly-value" id="agentAgency">
+                      Smart Property Group
+                    </div>
+                  </div>
+                  <div class="readonly-field">
+                    <div class="readonly-label">Direct Phone</div>
+                    <div class="readonly-value mono" id="agentDirect">
+                      08 9123 4501
+                    </div>
+                  </div>
+                </div>
+
+                <div class="profile-note">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  Agent details are read-only here. Edit them via
+                  <a href="#">Agents → Profile</a>.
+                </div>
+              </div>
+
+              <!-- Empty state when no agent selected -->
+              <div id="agentEmptyState" class="agent-empty-state">
+                <div style="font-size: 36px; margin-bottom: 10px">🧑‍💼</div>
+                <div
+                  style="
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                    font-size: 14px;
+                  "
+                >
+                  No agent selected yet
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    color: var(--text-muted);
+                    margin-top: 4px;
+                  "
+                >
+                  Select an agent above to view their details
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- STEP 8 — Review & Save                 -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="step-panel" id="panel-7">
+          <div class="form-card">
+            <div class="form-card-header">
+              <div
+                class="form-card-icon"
+                style="background: var(--green-light)"
+              >
+                ✅
+              </div>
+              <div>
+                <div class="form-card-title">Review &amp; Save Property</div>
+                <div class="form-card-subtitle">
+                  Confirm all details are correct before saving
+                </div>
+              </div>
+            </div>
+            <div class="form-card-body">
+              <div class="info-box">
+                ℹ️ Review the checklist below. Once saved, this property will
+                appear in your Properties list and a tenancy agreement can be
+                issued from the property record.
+              </div>
+
+              <div class="section-label">✅ Validation Checklist</div>
+              <div class="checklist-item">
+                ✔ Agreement type set — Residential, Fixed Term
+              </div>
+              <div class="checklist-item">
+                ✔ Property confirmed — 12 Example Street, Perth WA 6000
+              </div>
+              <div class="checklist-item">
+                ✔ Bedrooms / Bathrooms / Parking — 2 / 2 / 1
+              </div>
+              <div class="checklist-item">✔ Land size recorded — 350 m²</div>
+              <div class="checklist-item">
+                ✔ Keys issued — 2 physical keys, 1 fob, 1 garage remote
+              </div>
+              <div class="checklist-item">
+                ✔ Inclusions &amp; Exclusions recorded
+              </div>
+              <div class="checklist-item">✔ 3 property photos uploaded</div>
+              <div class="checklist-item">
+                ✔ Weekly rent — $600/wk · Bond: $2,400 · Pet Bond: $260
+              </div>
+              <div class="checklist-item">
+                ✔ Utilities configuration complete
+              </div>
+              <div class="checklist-item">
+                ✔ Owner details confirmed from Profile — John Smith
+              </div>
+              <div class="checklist-item">
+                ✔ Agent assigned — Murali Prakash (Licence: RA98231)
+              </div>
+              <div class="checklist-item warn">
+                ⚠ Floorplan not uploaded — optional but recommended
+              </div>
+
+              <div class="divider"></div>
+              <div class="section-label">📋 Property Summary</div>
+              <div
+                class="form-card"
+                style="
+                  box-shadow: none;
+                  border-color: var(--border);
+                  margin-bottom: 0;
+                "
+              >
+                <table class="summary-table">
+                  <tr>
+                    <td>Property</td>
+                    <td>12 Example Street, Perth WA 6000</td>
+                  </tr>
+                  <tr>
+                    <td>Type</td>
+                    <td>Apartment — 2 Bed / 2 Bath / 1 Parking</td>
+                  </tr>
+                  <tr>
+                    <td>Land Size</td>
+                    <td>350 m²</td>
+                  </tr>
+                  <tr>
+                    <td>Agreement</td>
+                    <td>Residential — Fixed Term</td>
+                  </tr>
+                  <tr>
+                    <td>Asking Rent</td>
+                    <td class="mono">$650 /wk</td>
+                  </tr>
+                  <tr>
+                    <td>Bond</td>
+                    <td class="mono">$2,400 · Pet Bond: $260</td>
+                  </tr>
+                  <tr>
+                    <td>Keys Issued</td>
+                    <td>2 × Physical, 1 × Fob, 1 × Garage Remote</td>
+                  </tr>
+                  <tr>
+                    <td>Owner</td>
+                    <td>John Smith — ABC Investments Pty Ltd</td>
+                  </tr>
+                  <tr>
+                    <td>Agent</td>
+                    <td>Murali Prakash — Smart Property Group</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="divider"></div>
+
+              <!-- Save actions only — no issue buttons -->
+              <div class="save-actions">
+                <div class="save-actions-left">
+                  <div class="save-actions-title">Ready to save?</div>
+                  <div class="save-actions-sub">
+                    The tenancy agreement can be created and issued from the
+                    property record after saving.
+                  </div>
+                </div>
+                <div class="save-actions-right">
+                  <button
+                    class="btn btn-outline"
+                    onclick="alert('Draft saved!')"
+                  >
+                    💾 Save as Draft
+                  </button>
+                  <button
+                    class="btn btn-green"
+                    onclick="alert('Property saved! Redirecting to property record…')"
+                  >
+                    ✔ Save Property
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── WIZARD NAV FOOTER ─── -->
+        <div class="wizard-nav">
+          <div class="wizard-nav-left">
+            <button
+              class="btn btn-outline"
+              id="prevBtn"
+              onclick="prevStep()"
+              style="visibility: hidden"
+            >
+              ← Previous
+            </button>
+            <span class="step-counter" id="footerCounter">Step 1 of 8</span>
+          </div>
+          <div class="wizard-nav-right">
+            <button
+              class="btn btn-outline btn-sm"
+              onclick="alert('Draft saved!')"
+            >
+              Save Draft
+            </button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+              Next Step →
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- /content -->
+    </main>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+      const STEPS = [
+        {
+          name: "Agreement Details",
+          desc: "Define the core agreement type, dates and occupancy",
+        },
+        {
+          name: "Property Details",
+          desc: "Address, specs, keys, inclusions and photo upload",
+        },
+        {
+          name: "Rent & Bond",
+          desc: "Weekly rent, bond amount and payment method",
+        },
+        {
+          name: "Utilities & Water",
+          desc: "Metering, responsibility and consumption settings",
+        },
+        {
+          name: "Pets, Strata & Legal",
+          desc: "Pet approvals, by-laws, and special conditions",
+        },
+        {
+          name: "Owner Details",
+          desc: "Auto-populated from your Owner Profile",
+        },
+        {
+          name: "Assign Agent",
+          desc: "Select a property manager from your team",
+        },
+        {
+          name: "Review & Save",
+          desc: "Confirm all details and save the property",
+        },
+      ];
+
+      let current = 0;
+
+      const AGENTS = {
+        mp: {
+          initials: "MP",
+          name: "Murali Prakash",
+          role: "Senior Property Manager",
+          phone: "0412 345 678",
+          email: "murali@propertygroup.com.au",
+          licence: "RA98231",
+          hours: "Mon–Fri, 9am–5pm",
+          agency: "Smart Property Group",
+          direct: "08 9123 4501",
+          color: "linear-gradient(135deg,#3b7bff,#6c3bff)",
+        },
+        jw: {
+          initials: "JW",
+          name: "Jessica Wong",
+          role: "Property Manager",
+          phone: "0423 111 222",
+          email: "jessica@propertygroup.com.au",
+          licence: "RA76542",
+          hours: "Mon–Fri, 8:30am–5pm",
+          agency: "Smart Property Group",
+          direct: "08 9123 4502",
+          color: "linear-gradient(135deg,#22c55e,#16a34a)",
+        },
+        rl: {
+          initials: "RL",
+          name: "Ryan Lee",
+          role: "Junior Property Manager",
+          phone: "0434 222 333",
+          email: "ryan@propertygroup.com.au",
+          licence: "RA54321",
+          hours: "Mon–Fri, 9am–5pm",
+          agency: "Smart Property Group",
+          direct: "08 9123 4503",
+          color: "linear-gradient(135deg,#f59e0b,#d97706)",
+        },
+        sk: {
+          initials: "SK",
+          name: "Sarah Kim",
+          role: "Property Manager",
+          phone: "0445 333 444",
+          email: "sarah@propertygroup.com.au",
+          licence: "RA65432",
+          hours: "Mon–Sat, 9am–4pm",
+          agency: "Smart Property Group",
+          direct: "08 9123 4504",
+          color: "linear-gradient(135deg,#8b5cf6,#6c3bff)",
+        },
+      };
+
+      function buildDots() {
+        const c = document.getElementById("stepDots");
+        c.innerHTML = "";
+        STEPS.forEach((s, i) => {
+          const wrap = document.createElement("div");
+          wrap.className = "step-dot-wrap";
+
+          const dot = document.createElement("div");
+          dot.className =
+            "step-dot" +
+            (i < current ? " done" : i === current ? " active" : "");
+          dot.innerHTML =
+            (i < current ? "✓" : i + 1) +
+            `<span class="step-dot-tooltip">${s.name}</span>`;
+          dot.onclick = () => {
+            if (i <= current) goTo(i);
+          };
+          wrap.appendChild(dot);
+
+          if (i < STEPS.length - 1) {
+            const line = document.createElement("div");
+            line.className = "step-dot-line" + (i < current ? " done" : "");
+            wrap.appendChild(line);
+          }
+          c.appendChild(wrap);
+        });
+      }
+
+      function goTo(index) {
+        document.getElementById("panel-" + current).classList.remove("active");
+        current = index;
+        document.getElementById("panel-" + current).classList.add("active");
+        updateUI();
+        document
+          .querySelector(".main")
+          .scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function nextStep() {
+        if (current < STEPS.length - 1) goTo(current + 1);
+      }
+      function prevStep() {
+        if (current > 0) goTo(current - 1);
+      }
+
+      function updateUI() {
+        const pct = Math.round(((current + 1) / STEPS.length) * 100);
+        const s = STEPS[current];
+        const isLast = current === STEPS.length - 1;
+
+        document.getElementById("stepBadge").textContent = `Step ${
+          current + 1
+        } of ${STEPS.length}`;
+        document.getElementById("stepName").textContent = s.name;
+        document.getElementById("stepDesc").textContent = s.desc;
+        document.getElementById("stepPct").textContent = pct + "% complete";
+        document.getElementById("progressBar").style.width = pct + "%";
+        document.getElementById("footerCounter").textContent = `Step ${
+          current + 1
+        } of ${STEPS.length}`;
+        document.getElementById("breadcrumbStep").textContent = s.name;
+
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const topBtn = document.getElementById("topNextBtn");
+
+        prevBtn.style.visibility = current === 0 ? "hidden" : "visible";
+
+        if (isLast) {
+          nextBtn.textContent = "Finish ✓";
+          nextBtn.className = "btn btn-green";
+          topBtn.textContent = "Finish ✓";
+          topBtn.className = "btn btn-green btn-sm";
+        } else {
+          nextBtn.textContent = "Next Step →";
+          nextBtn.className = "btn btn-primary";
+          topBtn.textContent = "Continue →";
+          topBtn.className = "btn btn-primary btn-sm";
+        }
+
+        buildDots();
+      }
+
+      function togglePill(el) {
+        el.classList.toggle("checked");
+      }
+
+      function toggleSection(id, value, showWhen) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle("hidden", value !== showWhen);
+      }
+
+      function selectRadio(el) {
+        document
+          .querySelectorAll(".radio-card")
+          .forEach((r) => r.classList.remove("selected"));
+        el.classList.add("selected");
+      }
+
+      function updateAgentPreview(sel) {
+        const preview = document.getElementById("agentPreview");
+        const empty = document.getElementById("agentEmptyState");
+        if (!sel.value) {
+          preview.classList.add("hidden");
+          empty.classList.remove("hidden");
+          return;
+        }
+        const a = AGENTS[sel.value];
+        document.getElementById("agentAvatarCard").textContent = a.initials;
+        document.getElementById("agentAvatarCard").style.background = a.color;
+        document.getElementById("agentCardName").textContent = a.name;
+        document.getElementById("agentCardRole").textContent = a.role;
+        document.getElementById("agentCardPhone").textContent = "📞 " + a.phone;
+        document.getElementById("agentCardEmail").textContent = "✉️ " + a.email;
+        document.getElementById("agentLicence").textContent = a.licence;
+        document.getElementById("agentHours").textContent = a.hours;
+        document.getElementById("agentAgency").textContent = a.agency;
+        document.getElementById("agentDirect").textContent = a.direct;
+        preview.classList.remove("hidden");
+        empty.classList.add("hidden");
+      }
+
+      function handlePhotos(event) {
+        const grid = document.getElementById("photoGrid");
+        const heroSel = document.getElementById("heroSelect");
+        const controls = document.getElementById("photoControls");
+        grid.innerHTML = "";
+        heroSel.innerHTML = "";
+
+        Array.from(event.target.files).forEach((file, i) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const thumb = document.createElement("div");
+            thumb.className = "photo-thumb";
+            thumb.innerHTML = `
+          <img src="${e.target.result}" alt="Photo ${i + 1}" />
+          ${i === 0 ? '<span class="hero-tag">Hero</span>' : ""}
+          <div class="remove-btn" onclick="this.parentElement.remove()">✕</div>`;
+            grid.appendChild(thumb);
+
+            const opt = docume

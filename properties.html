@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PropertyPortal — Properties</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f0f2f5;
+        --sidebar-bg: #0f1623;
+        --sidebar-text: #8a96aa;
+        --sidebar-active: #ffffff;
+        --radius: 12px;
+        --radius-sm: 8px;
+        --sidebar-bg: #0f1623;
+        --sidebar-text: #8a96aa;
+        --sidebar-active: #ffffff;
+        --sidebar-accent: #3b7bff;
+        --white: #ffffff;
+        --card: #ffffff;
+        --border: #e4e8ef;
+        --text-primary: #131b2e;
+        --text-secondary: #5a6478;
+        --text-muted: #9aa1b1;
+        --accent: #3b7bff;
+        --accent-light: #edf2ff;
+        --green: #22c55e;
+        --green-light: #f0fdf4;
+        --amber: #f59e0b;
+        --amber-light: #fffbeb;
+        --red: #ef4444;
+        --red-light: #fef2f2;
+        --purple: #8b5cf6;
+        --purple-light: #f5f3ff;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06),
+          0 1px 2px rgba(0, 0, 0, 0.04);
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+        --radius: 12px;
+        --radius-sm: 8px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        overflow: hidden;
+      }
+
+      /* ─── SIDEBAR ─── */
+/* ═══════════════════════════════════════════════════════
+   CANONICAL SIDEBAR — used across all PropertyPortal pages
+   ═══════════════════════════════════════════════════════ */
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.sidebar-brand {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.sidebar-brand .logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.sidebar-brand h1 { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
+.sidebar-brand span { font-size: 11px; color: var(--sidebar-text); }
+.sidebar-nav { padding: 14px 12px; flex: 1; overflow-y: auto; }
+.nav-label {
+  font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,.2);
+  letter-spacing: 1.2px; text-transform: uppercase;
+  padding: 12px 8px 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px; border-radius: var(--radius-sm);
+  color: var(--sidebar-text); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all .15s;
+  margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+.nav-item.active { background: rgba(59,123,255,.18); color: var(--sidebar-active); }
+.nav-item .icon { width: 18px; height: 18px; opacity: .65; flex-shrink: 0; }
+.nav-item.active .icon { opacity: 1; }
+.nav-badge {
+  margin-left: auto; background: var(--accent);
+  color: #fff; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 20px;
+}
+.nav-badge.amber { background: var(--amber); }
+.nav-badge.green { background: var(--green); }
+.nav-badge.purple { background: var(--purple); }
+
+/* Sub-nav (Appointments children) */
+.nav-sub {
+  margin-left: 28px; margin-top: 2px; margin-bottom: 4px;
+}
+.nav-sub-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  color: rgba(255,255,255,.4); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .15s;
+  margin-bottom: 1px; text-decoration: none;
+}
+.nav-sub-item::before { content: '•'; color: rgba(255,255,255,.2); font-size: 11px; }
+.nav-sub-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+.nav-sub-item.active { background: rgba(59,123,255,.22); color: #fff; font-weight: 600; }
+.nav-sub-item.active::before { color: #fff; }
+
+.sidebar-footer {
+  padding: 14px 12px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.user-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px; border-radius: var(--radius-sm); cursor: pointer;
+}
+.user-card:hover { background: rgba(255,255,255,.06); }
+.avatar {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg,#3b7bff,#6c3bff);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 13px; font-weight: 700;
+  color: #fff; flex-shrink: 0;
+}
+.user-info { flex: 1; overflow: hidden; }
+.user-info .name { font-size: 13px; font-weight: 600; color: #fff; }
+.user-info .role { font-size: 11px; color: var(--sidebar-text); }
+.user-card .dots { color: var(--sidebar-text); font-size: 16px; }
+
+      /* ─── MAIN ─── */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        max-height: 100vh;
+      }
+
+      /* ─── TOPBAR ─── */
+      .topbar {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 0 28px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-primary);
+        flex: 1;
+      }
+      .topbar-title span {
+        font-weight: 400;
+        color: var(--text-secondary);
+        font-size: 14px;
+        margin-left: 8px;
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 12px;
+        gap: 8px;
+        width: 260px;
+      }
+      .search-bar input {
+        border: none;
+        background: none;
+        outline: none;
+        font-size: 13px;
+        color: var(--text-primary);
+        font-family: "DM Sans", sans-serif;
+        width: 100%;
+      }
+      .search-bar input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        position: relative;
+        transition: background 0.15s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .notif-dot {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 7px;
+        height: 7px;
+        background: var(--red);
+        border-radius: 50%;
+        border: 1.5px solid #fff;
+      }
+
+      /* ─── CONTENT ─── */
+      .content {
+        padding: 24px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* ─── STATS ROW ─── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 14px;
+      }
+      .stat-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .stat-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+      .stat-icon.blue {
+        background: var(--accent-light);
+      }
+      .stat-icon.green {
+        background: var(--green-light);
+      }
+      .stat-icon.amber {
+        background: var(--amber-light);
+      }
+      .stat-icon.red {
+        background: var(--red-light);
+      }
+      .stat-body {
+      }
+      .stat-value {
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .stat-change {
+        font-size: 11px;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .stat-change.up {
+        color: var(--green);
+      }
+      .stat-change.neutral {
+        color: var(--text-muted);
+      }
+
+      /* ─── ACTIONS + TABLE ROW ─── */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .section-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        transition: opacity 0.15s;
+      }
+      .btn:hover {
+        opacity: 0.88;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-outline {
+        background: #fff;
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+      }
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      /* ─── FILTER ROW ─── */
+      .filter-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        border: 1px solid var(--border);
+      }
+      .filter-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .filter-chips {
+        display: flex;
+        gap: 6px;
+        flex: 1;
+        flex-wrap: wrap;
+      }
+      .chip {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+        transition: all 0.15s;
+      }
+      .chip.all {
+        background: var(--accent-light);
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .chip.active-chip {
+        background: var(--green-light);
+        color: var(--green);
+      }
+      .chip.archived-chip {
+        background: #f1f5f9;
+        color: #64748b;
+      }
+      .chip.draft-chip {
+        background: var(--amber-light);
+        color: var(--amber);
+      }
+      .chip:not(.all):hover {
+        border-color: currentColor;
+      }
+
+      .filter-select {
+        padding: 7px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text-primary);
+        outline: none;
+      }
+
+      /* ─── TABLE ─── */
+      .table-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead {
+        background: #f8fafc;
+      }
+      thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      thead th:first-child {
+        padding-left: 20px;
+      }
+      thead th:last-child {
+        padding-right: 20px;
+        text-align: right;
+      }
+      tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.12s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: #f8fafc;
+      }
+      td {
+        padding: 14px 16px;
+        font-size: 13.5px;
+        vertical-align: middle;
+      }
+      td:first-child {
+        padding-left: 20px;
+      }
+      td:last-child {
+        padding-right: 20px;
+        text-align: right;
+      }
+
+      .prop-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 14px;
+      }
+      .prop-address {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 2px;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .badge-active {
+        background: var(--green-light);
+        color: var(--green);
+      }
+      .badge-archived {
+        background: #f1f5f9;
+        color: #64748b;
+      }
+      .badge-draft {
+        background: var(--amber-light);
+        color: var(--amber);
+      }
+      .badge-pending {
+        background: var(--purple-light);
+        color: var(--purple);
+      }
+
+      .agent-cell {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .agent-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .agent-name {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .no-agent {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+
+      .actions-cell {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+      }
+      .action-btn {
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-secondary);
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.15s;
+      }
+      .action-btn:hover {
+        background: var(--bg);
+      }
+      .action-btn.view {
+        color: var(--accent);
+        border-color: var(--accent-light);
+        background: var(--accent-light);
+      }
+      .action-btn.view:hover {
+        background: #dbeaff;
+      }
+
+      /* ─── BOTTOM GRID ─── */
+      .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 16px;
+      }
+
+      /* ─── APPOINTMENTS PANEL ─── */
+      .panel {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+      }
+      .panel-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .panel-title {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .panel-link {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent);
+        cursor: pointer;
+      }
+
+      .appt-item {
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .appt-item:last-child {
+        border-bottom: none;
+      }
+      .appt-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-top: 4px;
+        flex-shrink: 0;
+      }
+      .appt-dot.new {
+        background: var(--accent);
+      }
+      .appt-dot.pending {
+        background: var(--amber);
+      }
+      .appt-body {
+        flex: 1;
+      }
+      .appt-name {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .appt-prop {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+      .appt-time {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+        font-family: "DM Mono", monospace;
+      }
+      .appt-actions {
+        display: flex;
+        gap: 5px;
+        margin-top: 6px;
+      }
+      .appt-btn {
+        padding: 3px 9px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid;
+        font-family: "DM Sans", sans-serif;
+      }
+      .appt-btn.accept {
+        color: var(--green);
+        border-color: #bbf7d0;
+        background: var(--green-light);
+      }
+      .appt-btn.reject {
+        color: var(--red);
+        border-color: #fecaca;
+        background: var(--red-light);
+      }
+      .appt-btn.reschedule {
+        color: var(--amber);
+        border-color: #fde68a;
+        background: var(--amber-light);
+      }
+
+      /* ─── ACTIVITY ─── */
+      .activity-item {
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+      .activity-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .activity-body {
+        flex: 1;
+      }
+      .activity-text {
+        font-size: 13px;
+        color: var(--text-primary);
+      }
+      .activity-text strong {
+        font-weight: 600;
+      }
+      .activity-time {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+        font-family: "DM Mono", monospace;
+      }
+
+      /* ─── QUICK ACTIONS ─── */
+      .quick-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .qa-btn {
+        flex: 1;
+        background: var(--card);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 14px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .qa-btn:hover {
+        border-color: var(--accent);
+        background: var(--accent-light);
+      }
+      .qa-btn:hover .qa-icon {
+        background: var(--accent);
+      }
+      .qa-btn:hover .qa-label {
+        color: var(--accent);
+      }
+      .qa-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin: 0 auto 8px;
+        transition: background 0.15s;
+      }
+      .qa-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        transition: color 0.15s;
+      }
+
+      /* ─── EMPTY STATE ─── */
+      .table-footer {
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--border);
+        background: #fafbfc;
+      }
+      .table-info {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .pagination {
+        display: flex;
+        gap: 4px;
+      }
+      .page-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--text-secondary);
+      }
+      .page-btn.active {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+      .page-btn:hover:not(.active) {
+        background: var(--bg);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark">
+          <div class="logo-icon">🏠</div>
+          <div>
+            <h1>PropertyPortal</h1>
+            <span>Management System</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main</div>
+        <a class="nav-item active" href="properties.html">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Properties
+        </a>
+        <a class="nav-item " href="appointments.html">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Appointments
+          <span class="nav-badge amber">4</span>
+        </a>
+
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Agents
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          Applications
+          <span class="nav-badge">7</span>
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          Tenancy
+          <span class="nav-badge green">5</span>
+        </a>
+
+        <div class="nav-label" style="margin-top:8px">Reports &amp; Feedback</div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          PCR
+          <span class="nav-badge amber">2</span>
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feedback
+          <span class="nav-badge purple">12</span>
+        </a>
+
+        <div class="nav-label" style="margin-top:8px">Manage</div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Owner Profile
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="avatar">SR</div>
+          <div class="user-info">
+            <div class="name">Sarah Robertson</div>
+            <div class="role">Product Owner</div>
+          </div>
+          <div class="dots">⋯</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <div class="topbar-title">
+          My Properties <span>All managed listings at a glance</span>
+        </div>
+        <div class="search-bar">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#9aa1b1"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input placeholder="Search by address, suburb…" />
+        </div>
+        <div class="icon-btn">
+          🔔
+          <div class="notif-dot"></div>
+        </div>
+        <div class="icon-btn">⚙️</div>
+        <button
+          class="btn btn-primary"
+          onclick="location.href='add-property.html'"
+        >
+          + Add Property
+        </button>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content">
+        <!-- STATS ROW -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon blue">🏘️</div>
+            <div class="stat-body">
+              <div class="stat-value">12</div>
+              <div class="stat-label">Total Properties</div>
+              <div class="stat-change up">↑ 2 this month</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">✅</div>
+            <div class="stat-body">
+              <div class="stat-value">8</div>
+              <div class="stat-label">Active Listings</div>
+              <div class="stat-change up">↑ 1 this week</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber">📋</div>
+            <div class="stat-body">
+              <div class="stat-value">4</div>
+              <div class="stat-label">Pending Appointments</div>
+              <div class="stat-change neutral">Needs your attention</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+          <div class="qa-btn" onclick="location.href='add-property.html'">
+            <div class="qa-icon">🏠</div>
+            <div class="qa-label">New Property</div>
+          </div>
+          <div class="qa-btn" onclick="location.href='appointments.html'">
+            <div class="qa-icon">📅</div>
+            <div class="qa-label">Appointments</div>
+          </div>
+          <div class="qa-btn" onclick="location.href='#'">
+            <div class="qa-icon">📄</div>
+            <div class="qa-label">Applications</div>
+          </div>
+        </div>
+
+        <!-- PROPERTY TABLE -->
+        <div>
+          <div class="section-header">
+            <div class="section-title">Property Listings</div>
+            <div class="section-actions">
+              <select class="filter-select" onchange="">
+                <option>Sort: Newest First</option>
+                <option>Sort: Address A–Z</option>
+                <option>Sort: Rent ↓</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILTER -->
+        <div class="filter-row">
+          <div class="filter-label">Filter:</div>
+          <div class="filter-chips">
+            <div class="chip all">All (12)</div>
+            <div class="chip active-chip">Active (8)</div>
+            <div class="chip draft-chip">Draft (1)</div>
+            <div class="chip archived-chip">Archived (3)</div>
+          </div>
+          <select class="filter-select">
+            <option>All Agents</option>
+            <option>Murali Prakash</option>
+            <option>Jessica Wong</option>
+            <option>Unassigned</option>
+          </select>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Rent</th>
+                <th>Status</th>
+                <th>Agent</th>
+                <th>Available From</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="prop-name">12 Lakeview Street</div>
+                  <div class="prop-address">📍 Perth WA 6000 · Apt 5B</div>
+                </td>
+                <td>Apartment</td>
+                <td>
+                  <strong style="font-family: 'DM Mono', monospace">$650</strong
+                  ><span style="font-size: 11px; color: #9aa1b1">/wk</span>
+                </td>
+                <td><span class="badge badge-active">● Active</span></td>
+                <td>
+                  <div class="agent-cell">
+                    <div
+                      class="agent-avatar"
+                      style="
+                        background: linear-gradient(135deg, #3b7bff, #6c3bff);
+                      "
+                    >
+                      MP
+                    </div>
+                    <div class="agent-name">Murali P.</div>
+                  </div>
+                </td>
+                <td>
+                  <span
+                    style="font-size: 12px; font-family: 'DM Mono', monospace"
+                    >12 Mar 2026</span
+                  >
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button
+                      class="action-btn view"
+                      onclick="alert('View Property Detail')"
+                    >
+                      View
+                    </button>
+                    <button class="action-btn" onclick="alert('Edit Property')">
+                      Edit
+                    </button>
+                    <button class="action-btn" onclick="alert('Archive?')">
+                      Archive
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="prop-name">45 Riverside Drive</div>
+                  <div class="prop-address">📍 South Perth WA 6151</div>
+                </td>
+                <td>Townhouse</td>
+                <td>
+                  <strong style="font-family: 'DM Mono', monospace">$820</strong
+                  ><span style="font-size: 11px; color: #9aa1b1">/wk</span>
+                </td>
+                <td><span class="badge badge-active">● Active</span></td>
+                <td>
+                  <div class="agent-cell">
+                    <div
+                      class="agent-avatar"
+                      style="
+                        background: linear-gradient(135deg, #22c55e, #16a34a);
+                      "
+                    >
+                      JW
+                    </div>
+                    <div class="agent-name">Jessica W.</div>
+                  </div>
+                </td>
+                <td>
+                  <span
+                    style="font-size: 12px; font-family: 'DM Mono', monospace"
+                    >01 Apr 2026</span
+                  >
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="action-btn view" onclick="alert('View')">
+                      View
+                    </button>
+                    <button class="action-btn" onclick="alert('Edit')">
+                      Edit
+                    </button>
+                    <button class="action-btn" onclick="alert('Archive?')">
+                      Archive
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="prop-name">8 Sunset Boulevard</div>
+                  <div class="prop-address">📍 Fremantle WA 6160</div>
+                </td>
+                <td>House</td>
+                <td>
+                  <strong style="font-family: 'DM Mono', monospace">$950</strong
+                  ><span style="font-size: 11px; color: #9aa1b1">/wk</span>
+                </td>
+                <td><span class="badge badge-pending">● Pending</span></td>
+                <td><div class="no-agent">⚠ Not assigned</div></td>
+                <td>
+                  <span
+                    style="font-size: 12px; font-family: 'DM Mono', monospace"
+                    >15 Mar 2026</span
+                  >
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="action-btn view" onclick="alert('View')">
+                      View
+                    </button>
+                    <button
+                      class="action-btn"
+                      style="
+                        color: var(--accent);
+                        border-color: var(--accent-light);
+                        background: var(--accent-light);
+                      "
+                      onclick="alert('Assign Agent')"
+                    >
+                      Assign
+                    </button>
+                    <button class="action-btn" onclick="alert('Edit')">
+                      Edit
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="prop-name">22 Ocean View Terrace</div>
+                  <div class="prop-address">📍 Cottesloe WA 6011</div>
+                </td>
+                <td>Apartment</td>
+                <td>
+                  <strong style="font-family: 'DM Mono', monospace"
+                    >$1,100</strong
+                  ><span style="font-size: 11px; color: #9aa1b1">/wk</span>
+                </td>
+                <td><span class="badge badge-draft">● Draft</span></td>
+                <td><div class="no-agent">— Not assigned</div></td>
+                <td>
+                  <span style="font-size: 12px; color: #9aa1b1">TBC</span>
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="action-btn view" onclick="alert('View')">
+                      View
+                    </button>
+                    <button class="action-btn" onclick="alert('Edit Draft')">
+                      Edit
+                    </button>
+                    <button class="action-btn" onclick="alert('Publish?')">
+                      Publish
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="prop-name">3/19 Murray Street</div>
+                  <div class="prop-address">📍 Perth WA 6000 · Unit 3</div>
+                </td>
+                <td>Apartment</td>
+                <td>
+                  <strong style="font-family: 'DM Mono', monospace">$550</strong
+                  ><span style="font-size: 11px; color: #9aa1b1">/wk</span>
+                </td>
+                <td><span class="badge badge-active">● Active</span></td>
+                <td>
+                  <div class="agent-cell">
+                    <div
+                      class="agent-avatar"
+                      style="
+                        background: linear-gradient(135deg, #f59e0b, #d97706);
+                      "
+                    >
+                      RL
+                    </div>
+                    <div class="agent-name">Ryan L.</div>
+                  </div>
+                </td>
+                <td>
+                  <span
+                    style="font-size: 12px; font-family: 'DM Mono', monospace"
+                    >20 Mar 2026</span
+                  >
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="action-btn view" onclick="alert('View')">
+                      View
+                    </button>
+                    <button class="action-btn" onclick="alert('Edit')">
+                      Edit
+                    </button>
+                    <button class="action-btn" onclick="alert('Archive?')">
+                      Archive
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="table-footer">
+            <div class="table-info">Showing 5 of 12 properties</div>
+            <div class="pagination">
+              <div class="page-btn active">1</div>
+              <div class="page-btn">2</div>
+              <div class="page-btn">3</div>
+              <div class="page-btn">›</div>
+            </div>
+          </div>
+        </div>
+
+    </main>
+  </body>
+</html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>PropertyPortal — Inspection Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#eef0f4; --card:#ffffff; --border:#e2e6ed;
+      --txt:#131b2e; --sec:#5a6478; --muted:#9aa1b1;
+      --accent:#3b7bff; --green:#22c55e; --amber:#f59e0b;
+      --red:#ef4444; --purple:#8b5cf6;
+      --sidebar-bg:#0f1623; --sidebar-text:#8a96aa; --sidebar-active:#ffffff;
+      --radius:12px; --radius-sm:8px;
+      --al:#edf2ff; --ah:#2563eb; --gl:#f0fdf4; --gd:#16a34a;
+      --ambl:#fffbeb; --rl:#fef2f2; --pl:#f5f3ff;
+      --sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+      --shm:0 4px 16px rgba(0,0,0,.08); --shl:0 12px 32px rgba(0,0,0,.14);
+      --r:12px; --rs:8px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;overflow:hidden}
+
+    /* SIDEBAR */
+    /* ═══════════════════════════════════════════════════════
+       CANONICAL SIDEBAR — used across all PropertyPortal pages
+       ═══════════════════════════════════════════════════════ */
+    .sidebar {
+      width: 240px;
+      min-height: 100vh;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .sidebar-brand {
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .sidebar-brand .logo-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .sidebar-brand h1 { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
+    .sidebar-brand span { font-size: 11px; color: var(--sidebar-text); }
+    .sidebar-nav { padding: 14px 12px; flex: 1; overflow-y: auto; }
+    .nav-label {
+      font-size: 10px; font-weight: 600;
+      color: rgba(255,255,255,.2);
+      letter-spacing: 1.2px; text-transform: uppercase;
+      padding: 12px 8px 6px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; border-radius: var(--radius-sm);
+      color: var(--sidebar-text); font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all .15s;
+      margin-bottom: 2px; text-decoration: none;
+    }
+    .nav-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+    .nav-item.active { background: rgba(59,123,255,.18); color: var(--sidebar-active); }
+    .nav-item .icon { width: 18px; height: 18px; opacity: .65; flex-shrink: 0; }
+    .nav-item.active .icon { opacity: 1; }
+    .nav-badge {
+      margin-left: auto; background: var(--accent);
+      color: #fff; font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 20px;
+    }
+    .nav-badge.amber { background: var(--amber); }
+    .nav-badge.green { background: var(--green); }
+    .nav-badge.purple { background: var(--purple); }
+    
+    /* Sub-nav (Appointments children) */
+    .nav-sub {
+      margin-left: 28px; margin-top: 2px; margin-bottom: 4px;
+    }
+    .nav-sub-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 10px; border-radius: var(--radius-sm);
+      color: rgba(255,255,255,.4); font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all .15s;
+      margin-bottom: 1px; text-decoration: none;
+    }
+    .nav-sub-item::before { content: '•'; color: rgba(255,255,255,.2); font-size: 11px; }
+    .nav-sub-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+    .nav-sub-item.active { background: rgba(59,123,255,.22); color: #fff; font-weight: 600; }
+    .nav-sub-item.active::before { color: #fff; }
+    
+    .sidebar-footer {
+      padding: 14px 12px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .user-card {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px; border-radius: var(--radius-sm); cursor: pointer;
+    }
+    .user-card:hover { background: rgba(255,255,255,.06); }
+    .avatar {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg,#3b7bff,#6c3bff);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 13px; font-weight: 700;
+      color: #fff; flex-shrink: 0;
+    }
+    .user-info { flex: 1; overflow: hidden; }
+    .user-info .name { font-size: 13px; font-weight: 600; color: #fff; }
+    .user-info .role { font-size: 11px; color: var(--sidebar-text); }
+    .user-card .dots { color: var(--sidebar-text); font-size: 16px; }
+    
+
+    /* MAIN */
+    .main{flex:1;display:flex;flex-direction:column;overflow-y:auto;max-height:100vh}
+
+    /* TOPBAR */
+    .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+    .tb-left{display:flex;align-items:center;gap:14px}
+    .tb-title{font-size:17px;font-weight:700;color:var(--txt)}
+    .tb-sub{font-size:13px;color:var(--sec);margin-top:1px}
+    .tb-right{display:flex;align-items:center;gap:10px}
+    .live-badge{display:flex;align-items:center;gap:7px;background:var(--gl);border:1px solid #bbf7d0;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:700;color:#166534}
+    .live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 1.6s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+    /* PROPERTY BANNER */
+    .prop-banner{background:var(--card);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;gap:14px}
+    .pb-thumb{width:72px;height:52px;border-radius:var(--rs);overflow:hidden;flex-shrink:0;border:1px solid var(--border)}
+    .pb-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .pb-addr{font-size:16px;font-weight:700;color:var(--txt)}
+    .pb-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+    .pb-chip{background:var(--al);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:16px}
+    .pb-back{margin-left:auto;display:flex;align-items:center;gap:8px}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:var(--rs);border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+    .btn:hover{opacity:.88}
+    .bp{background:var(--accent);color:#fff}.bp:hover{background:var(--ah)}
+    .bg{background:var(--green);color:#fff}.bg:hover{background:var(--gd)}
+    .br{background:var(--red);color:#fff}
+    .bo{background:var(--card);color:var(--txt);border:1.5px solid var(--border)}.bo:hover{border-color:var(--accent);color:var(--accent)}
+    .bgh{background:none;color:var(--muted);border:1px solid var(--border)}.bgh:hover{background:var(--bg);color:var(--txt)}
+    .bsm{padding:7px 12px;font-size:12px}
+    .btn:disabled{opacity:.42;cursor:not-allowed}
+
+    /* CONTENT */
+    .content{padding:20px 28px 60px}
+
+    /* TABS */
+    .tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:20px;overflow:hidden}
+    .tab{flex:1;padding:13px 20px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;border-bottom:3px solid transparent;transition:all .15s}
+    .tab:hover:not(.on){color:var(--sec);background:var(--bg)}
+    .tab.on{color:var(--accent);border-bottom-color:var(--accent);background:var(--al)}
+    .tcnt{font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;min-width:20px;text-align:center}
+    .tab.on .tcnt{background:var(--accent);color:#fff}
+    .tab:not(.on) .tcnt{background:var(--muted);color:#fff}
+
+    /* STATS */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+    .sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);border-left:4px solid transparent;text-align:center}
+    .sc.sb{border-left-color:var(--accent)}.sc.sg{border-left-color:var(--green)}.sc.sr{border-left-color:var(--red)}.sc.sp{border-left-color:var(--purple)}.sc.sa{border-left-color:var(--amber)}
+    .sv{font-size:26px;font-weight:700;font-family:'DM Mono',monospace;line-height:1}
+    .sc.sb .sv{color:var(--accent)}.sc.sg .sv{color:var(--gd)}.sc.sr .sv{color:var(--red)}.sc.sp .sv{color:var(--purple)}.sc.sa .sv{color:var(--amber)}
+    .sl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
+
+    /* TOOLBAR */
+    .tb2{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+    .sbox{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:0 12px;flex:1;min-width:180px;max-width:280px}
+    .sbox svg{color:var(--muted);flex-shrink:0}
+    .sbox input{border:none;outline:none;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--txt);background:none;padding:10px 0;width:100%}
+    .sbox input::placeholder{color:var(--muted)}
+    .fpill{padding:7px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--sec);transition:all .15s}
+    .fpill:hover{border-color:var(--accent);color:var(--accent)}
+    .fpill.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    /* VISITOR CARDS */
+    .vlist{display:flex;flex-direction:column;gap:10px}
+    .vc{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;transition:border-color .15s}
+    .vc:hover{box-shadow:var(--shm)}
+    .vc.cin{border-color:#bbf7d0}.vc.ns{border-color:#fecaca}
+    .vc-body{display:flex;align-items:center;gap:12px;padding:14px 16px}
+    .av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+    .vi{flex:1;min-width:0}
+    .vn{font-size:14px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+    .vct{font-size:12px;color:var(--muted);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+    .vt{font-size:11px;color:var(--gd);font-weight:600;margin-top:3px;font-family:'DM Mono',monospace}
+    .vax{display:flex;align-items:center;gap:7px;flex-shrink:0}
+
+    /* BADGES */
+    .bdg{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+    .bb{background:var(--al);color:#1e40af;border:1px solid #c7d9ff}
+    .bc{background:var(--gl);color:#166534;border:1px solid #bbf7d0}
+    .bns{background:var(--rl);color:#991b1b;border:1px solid #fecaca}
+    .bw{background:var(--pl);color:#5b21b6;border:1px solid #ddd6fe}
+    .bap{background:var(--gl);color:#166534;border:1px solid #bbf7d0}
+    .bpd{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+    .biv{background:var(--al);color:#1e40af;border:1px solid #c7d9ff}
+
+    /* NOTES */
+    .vnr{padding:0 16px 12px 68px}
+    .ntog{font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
+    .narea{margin-top:8px;width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--txt);resize:vertical;height:62px;outline:none;background:var(--bg)}
+    .narea:focus{border-color:var(--accent);background:var(--card)}
+    .nexist{font-size:13px;color:var(--sec);font-style:italic;padding:7px 10px;background:var(--ambl);border:1px solid #fde68a;border-radius:var(--rs);margin-bottom:6px}
+
+    /* WALK-IN PANEL */
+    .wip{background:var(--card);border:1.5px solid var(--accent);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-top:16px;background:linear-gradient(135deg,var(--al),#f0f9ff)}
+    .wip-hd{padding:13px 18px;border-bottom:1px solid #c7d9ff;display:flex;align-items:center;gap:10px}
+    .wip-ic{width:28px;height:28px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px}
+    .wip-tl{font-size:13px;font-weight:700;color:var(--txt)}
+    .wip-bd{padding:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+    .wif{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
+    .wif label{font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px}
+    .wi{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--card)}
+    .wi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,123,255,.1)}
+    .wi.req{border-left:3px solid var(--accent)}
+
+    /* APPROVAL CARDS */
+    .ac{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;transition:all .15s}
+    .ac.app{border-color:#bbf7d0;background:#fafffe}
+    .ac.invd{border-color:#c7d9ff;background:#fafbff}
+    .ac-body{display:flex;align-items:flex-start;gap:12px;padding:14px 16px}
+    .achk input{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;margin-top:2px}
+    .a-inf{flex:1;min-width:0}
+    .an{font-size:14px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+    .am{font-size:12px;color:var(--muted);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+    .anote{font-size:13px;color:var(--sec);margin-top:6px;padding:7px 10px;background:var(--ambl);border:1px solid #fde68a;border-radius:var(--rs);font-style:italic}
+    .itog{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--muted);transition:all .15s;white-space:nowrap}
+    .itog:hover{border-color:var(--amber);color:var(--amber)}
+    .itog.on{background:var(--ambl);border-color:var(--amber);color:#92400e}
+
+    /* BULK BAR */
+    .bbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:#0f1623;border-radius:var(--rs);margin-bottom:14px;flex-wrap:wrap}
+    .bbar-txt{font-size:13px;font-weight:600;color:rgba(255,255,255,.8);flex:1}
+    .bbar.hide{display:none}
+
+    /* SEND SECTION */
+    .ss{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-top:16px}
+    .ss-hd{padding:13px 18px;border-bottom:1px solid var(--border);background:#f8fafc;display:flex;align-items:center;justify-content:space-between}
+    .ss-tl{font-size:13px;font-weight:700;color:var(--txt)}
+    .ss-bd{padding:18px}
+    .iinfo{display:flex;align-items:flex-start;gap:10px;background:var(--al);border:1px solid #c7d9ff;border-radius:var(--rs);padding:12px 14px;font-size:13px;color:#1e40af;margin-bottom:16px;line-height:1.6}
+    .ipreview{background:#f8fafc;border:1px solid var(--border);border-radius:var(--rs);padding:14px;margin-bottom:16px}
+    .ipreview-tl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+    .ir{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+    .ir:last-child{border-bottom:none}
+    .ir-n{font-weight:600;color:var(--txt);flex:1}
+    .ir-c{color:var(--muted);font-size:12px;font-family:'DM Mono',monospace}
+    .ir-m{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+    .irm-e{background:var(--al);color:#1e40af}
+    .irm-s{background:var(--gl);color:#166534}
+    .irm-n{background:var(--rl);color:#991b1b}
+
+    /* CONFIRM BANNER */
+    .cbanner{display:none;align-items:center;gap:12px;padding:14px 18px;background:var(--gl);border:1px solid #bbf7d0;border-radius:var(--rs);margin-bottom:14px}
+    .cbanner.show{display:flex;animation:fin .3s ease}
+    @keyframes fin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+    /* EMPTY */
+    .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+    .empty-ic{font-size:38px;margin-bottom:12px}
+    .empty-tl{font-size:15px;font-weight:700;color:var(--sec);margin-bottom:5px}
+
+    /* MODAL */
+    .mov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:400;opacity:0;pointer-events:none;transition:opacity .2s}
+    .mov.open{opacity:1;pointer-events:all}
+    .modal{background:#fff;border-radius:16px;padding:24px;max-width:460px;width:100%;margin:20px;box-shadow:var(--shl);transform:translateY(10px);transition:transform .2s;position:relative}
+    .mov.open .modal{transform:translateY(0)}
+    .mtl{font-size:17px;font-weight:700;margin-bottom:3px}
+    .msb{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+    .mcl{position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted)}
+    .mact{display:flex;gap:10px;margin-top:16px}
+    .mcan{flex:1;padding:11px;background:var(--bg);color:var(--txt);border:1px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+    .mok{flex:1;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;color:#fff}
+    .mok.green{background:var(--green)}.mok.green:hover{background:var(--gd)}
+    .mok.red{background:var(--red)}
+    .modal-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+    .modal-row:last-child{border-bottom:none}
+
+    /* END MODAL */
+    .end-stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+    .end-stat-item{background:var(--bg);border-radius:var(--rs);padding:12px;text-align:center}
+    .end-stat-val{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;color:var(--txt)}
+    .end-stat-lbl{font-size:11px;color:var(--muted);margin-top:3px;font-weight:600;text-transform:uppercase}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;right:24px;background:#1e293b;color:#fff;padding:13px 18px;border-radius:10px;box-shadow:var(--shl);font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:500;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:340px}
+    .toast.show{transform:translateY(0);opacity:1}
+    .mono{font-family:'DM Mono',monospace}
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark">
+          <div class="logo-icon">🏠</div>
+          <div>
+            <h1>PropertyPortal</h1>
+            <span>Management System</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main</div>
+        <a class="nav-item " href="properties.html">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Properties
+        </a>
+        <a class="nav-item active" href="appointments.html">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Appointments
+          <span class="nav-badge green">2 Live</span>
+        </a>
+        <div class="nav-sub">
+          <a class="nav-sub-item " href="appointments.html">All Inspections</a>
+          <a class="nav-sub-item active" href="inspection.html">Check-In</a>
+          <a class="nav-sub-item " href="inspection.html#approval">Approval</a>
+        </div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Agents
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          Applications
+          <span class="nav-badge">7</span>
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          Tenancy
+          <span class="nav-badge green">5</span>
+        </a>
+
+        <div class="nav-label" style="margin-top:8px">Reports &amp; Feedback</div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          PCR
+          <span class="nav-badge amber">2</span>
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feedback
+          <span class="nav-badge purple">12</span>
+        </a>
+
+        <div class="nav-label" style="margin-top:8px">Manage</div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Owner Profile
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="avatar">SR</div>
+          <div class="user-info">
+            <div class="name">Sarah Robertson</div>
+            <div class="role">Product Owner</div>
+          </div>
+          <div class="dots">⋯</div>
+        </div>
+      </div>
+    </aside>
+
+<main class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="live-badge"><div class="live-dot"></div>Inspection Live</div>
+      <div>
+        <div class="tb-title" id="page-title">Check-In Management</div>
+        <div class="tb-sub">Sat 14 Mar · 10:00 – 10:30 AM</div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <button class="btn bgh bsm" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn bo bsm" onclick="openM('endModal')">⏹ End Inspection</button>
+    </div>
+  </div>
+
+  <!-- PROPERTY BANNER -->
+  <div class="prop-banner">
+    <div class="pb-thumb"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200" alt=""/></div>
+    <div>
+      <div class="pb-addr">12 Example Street, Perth WA 6000</div>
+      <div class="pb-meta">
+        <div class="pb-chip">🏢 Apartment</div>
+        <div class="pb-chip">🛏 2 Bed · 🛁 2 Bath</div>
+        <div class="pb-chip mono">$650/wk</div>
+        <div class="pb-chip">📅 Fixed Term</div>
+      </div>
+    </div>
+    <div class="pb-back">
+      <a href="appointments.html" class="btn bo bsm">← Appointments</a>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab on" id="t-ci" onclick="switchTab('ci')">✅ Check-In <span class="tcnt" id="tc-ci">0</span></button>
+      <button class="tab" id="t-ap" onclick="switchTab('ap')">📋 Approve &amp; Invite <span class="tcnt" id="tc-ap">0</span></button>
+    </div>
+
+    <!-- ══ CHECK-IN PANEL ══ -->
+    <div id="p-ci">
+      <div class="stats">
+        <div class="sc sb"><div class="sv" id="ci-bk">0</div><div class="sl">Booked</div></div>
+        <div class="sc sg"><div class="sv" id="ci-ck">0</div><div class="sl">Checked In</div></div>
+        <div class="sc sr"><div class="sv" id="ci-ns">0</div><div class="sl">No Show</div></div>
+        <div class="sc sp"><div class="sv" id="ci-wk">0</div><div class="sl">Walk-Ins</div></div>
+      </div>
+
+      <div class="tb2">
+        <div class="sbox">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="ci-q" placeholder="Search visitor…" oninput="renderCI()"/>
+        </div>
+        <div class="fpill on" id="cf-all"        onclick="ciF('all')">All</div>
+        <div class="fpill"   id="cf-BOOKED"      onclick="ciF('BOOKED')">Booked</div>
+        <div class="fpill"   id="cf-CHECKED_IN"  onclick="ciF('CHECKED_IN')">Checked In</div>
+        <div class="fpill"   id="cf-NO_SHOW"      onclick="ciF('NO_SHOW')">No Show</div>
+      </div>
+
+      <div class="vlist" id="ci-list"></div>
+
+      <!-- Walk-in -->
+      <div class="wip">
+        <div class="wip-hd"><div class="wip-ic">🚶</div><div class="wip-tl">Add Walk-In Visitor</div></div>
+        <div class="wip-bd">
+          <div class="wif"><label>Full Name *</label><input class="wi req" id="wi-n" placeholder="Enter full name"/></div>
+          <div class="wif"><label>Phone</label><input class="wi" id="wi-p" placeholder="04XX XXX XXX"/></div>
+          <div class="wif"><label>Email</label><input class="wi" id="wi-e" placeholder="visitor@email.com"/></div>
+          <button class="btn bg" onclick="addWalkin()">+ Check In Walk-In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ APPROVE PANEL ══ -->
+    <div id="p-ap" style="display:none">
+      <div class="stats">
+        <div class="sc sb"><div class="sv" id="ap-tot">0</div><div class="sl">Attendees</div></div>
+        <div class="sc sg"><div class="sv" id="ap-app">0</div><div class="sl">Approved</div></div>
+        <div class="sc sa"><div class="sv" id="ap-hi">0</div><div class="sl">High Interest</div></div>
+        <div class="sc sb"><div class="sv" id="ap-inv">0</div><div class="sl">Invited</div></div>
+      </div>
+
+      <div class="cbanner" id="cbanner">
+        <div style="font-size:22px">✅</div>
+        <div style="flex:1;font-size:13px;font-weight:600;color:#166534" id="cbt"></div>
+        <div style="font-size:11px;color:#166534;opacity:.7;font-family:'DM Mono',monospace" id="cbtime"></div>
+      </div>
+
+      <div class="tb2">
+        <div class="sbox">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="ap-q" placeholder="Search by name or notes…" oninput="renderAP()"/>
+        </div>
+        <button class="btn bo bsm" onclick="selAll(true)">Select All</button>
+        <button class="btn bo bsm" onclick="selAll(false)">Deselect All</button>
+        <button class="btn bo bsm" onclick="selHI()">⭐ Select High Interest</button>
+      </div>
+
+      <div class="bbar hide" id="bbar">
+        <span class="bbar-txt" id="bbar-txt"></span>
+        <button class="btn bgh bsm" onclick="selAll(false)">✕ Clear</button>
+      </div>
+
+      <div class="vlist" id="ap-list"></div>
+
+      <div class="ss">
+        <div class="ss-hd">
+          <div class="ss-tl">📨 Send Application Invitations</div>
+          <span style="font-size:12px;color:var(--muted)" id="send-cnt">0 approved</span>
+        </div>
+        <div class="ss-bd">
+          <div class="iinfo">ℹ️ Each approved visitor receives a <strong>temporary login link</strong> pre-loaded with <strong>12 Example Street</strong>. They sign in and submit their application without searching. Links expire in 48 hours.</div>
+          <div class="ipreview"><div class="ipreview-tl">Invite Preview</div><div id="ipreview"></div></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn bg" id="send-btn" onclick="openM('sendModal')" disabled>✉️ Send Invitations</button>
+            <button class="btn bo" onclick="exportApproved()">⬇ Export Approved CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- SEND CONFIRM MODAL -->
+<div class="mov" id="sendModal">
+  <div class="modal">
+    <button class="mcl" onclick="closeM('sendModal')">✕</button>
+    <div class="mtl">✉️ Confirm — Send Invitations</div>
+    <div class="msb" id="send-msb"></div>
+    <div id="send-mlist" style="max-height:200px;overflow-y:auto"></div>
+    <div class="mact">
+      <button class="mcan" onclick="closeM('sendModal')">Cancel</button>
+      <button class="mok green" onclick="confirmSend()">Send Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- END INSPECTION MODAL -->
+<div class="mov" id="endModal">
+  <div class="modal">
+    <button class="mcl" onclick="closeM('endModal')">✕</button>
+    <div class="mtl">⏹ End Inspection</div>
+    <div class="msb">Close this inspection session. You can still view results from the Appointments dashboard.</div>
+    <div class="end-stat" id="end-stats"></div>
+    <div class="mact">
+      <button class="mcan" onclick="closeM('endModal')">Keep Running</button>
+      <button class="mok red" onclick="confirmEnd()">End Inspection</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="tmsg"></span></div>
+
+<script>
+  const COLS=['linear-gradient(135deg,#3b7bff,#6c3bff)','linear-gradient(135deg,#22c55e,#16a34a)','linear-gradient(135deg,#f59e0b,#d97706)','linear-gradient(135deg,#8b5cf6,#6d28d9)','linear-gradient(135deg,#ef4444,#dc2626)','linear-gradient(135deg,#06b6d4,#0284c7)'];
+  const ini=n=>n.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+  const col=n=>{let h=0;for(let c of n)h=(h*31+c.charCodeAt(0))%COLS.length;return COLS[h]};
+
+  let cif='all';
+  let V=JSON.parse(localStorage.getItem('pp_v'))||[
+    {id:1,name:'John Smith',    phone:'0412 345 678',email:'john@example.com', status:'BOOKED',   notes:'Very interested, wants 12-month lease',ci:null,wi:false,ok:false,hi:false,sent:false},
+    {id:2,name:'Sarah Williams',phone:'0498 765 432',email:'sarah@email.com',  status:'BOOKED',   notes:'Asked about pets policy',            ci:null,wi:false,ok:false,hi:false,sent:false},
+    {id:3,name:'Michael Chen',  phone:'0487 123 456',email:'',                 status:'BOOKED',   notes:'',                                   ci:null,wi:false,ok:false,hi:false,sent:false},
+    {id:4,name:'Emma Torres',   phone:'0456 444 555',email:'emma@example.com', status:'BOOKED',   notes:'',                                   ci:null,wi:false,ok:false,hi:false,sent:false},
+    {id:5,name:'David Kim',     phone:'0445 333 444',email:'david@example.com',status:'BOOKED',   notes:'Keen on early move-in',              ci:null,wi:false,ok:false,hi:false,sent:false},
+  ];
+  let nid=6;
+
+  function save(){localStorage.setItem('pp_v',JSON.stringify(V));stats()}
+
+  function stats(){
+    const bk=V.filter(v=>v.status==='BOOKED').length;
+    const ck=V.filter(v=>v.status==='CHECKED_IN').length;
+    const ns=V.filter(v=>v.status==='NO_SHOW').length;
+    const wk=V.filter(v=>v.wi).length;
+    const ap=V.filter(v=>v.ok).length;
+    const hi=V.filter(v=>v.hi).length;
+    const sv=V.filter(v=>v.sent).length;
+    ss('ci-bk',bk);ss('ci-ck',ck);ss('ci-ns',ns);ss('ci-wk',wk);
+    ss('ap-tot',ck);ss('ap-app',ap);ss('ap-hi',hi);ss('ap-inv',sv);
+    ss('tc-ci',ck);ss('tc-ap',ap);
+    ss('sb-ci-cnt',ck);ss('sb-ap-cnt',ap);
+    ss('send-cnt',ap+' approved');
+    document.getElementById('send-btn').disabled=V.filter(v=>v.ok&&!v.sent).length===0;
+    prevInvites();
+  }
+  const ss=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+
+  function switchTab(t){
+    ['ci','ap'].forEach(k=>{
+      document.getElementById('p-'+k).style.display=k===t?'':'none';
+      document.getElementById('t-'+k).classList.toggle('on',k===t);
+    });
+    document.getElementById('page-title').textContent=t==='ci'?'Check-In Management':'Approval & Invitations';
+    // Update sidebar sub-nav active state
+    document.querySelectorAll('.nav-sub-item').forEach(el=>{
+      el.classList.remove('active');
+      if(t==='ci' && el.textContent.trim().startsWith('Check-In')) el.classList.add('active');
+      if(t==='ap' && el.textContent.trim().startsWith('Approval')) el.classList.add('active');
+    });
+    if(t==='ap')renderAP();
+  }
+
+  function ciF(f){
+    cif=f;
+    ['all','BOOKED','CHECKED_IN','NO_SHOW'].forEach(k=>{
+      const b=document.getElementById('cf-'+k);
+      if(b){b.classList.toggle('on',k===f)}
+    });
+    renderCI();
+  }
+
+  function renderCI(){
+    const list=document.getElementById('ci-list');
+    const q=document.getElementById('ci-q').value.toLowerCase();
+    let rows=V.filter(v=>v.name.toLowerCase().includes(q));
+    if(cif!=='all')rows=rows.filter(v=>v.status===cif);
+    if(!rows.length){list.innerHTML=`<div class="empty"><div class="empty-ic">🔍</div><div class="empty-tl">No visitors found</div></div>`;return}
+    list.innerHTML='';
+    rows.forEach(v=>{
+      const i=V.indexOf(v);
+      const cls=v.status==='CHECKED_IN'?'cin':v.status==='NO_SHOW'?'ns':'';
+      const sbdg=v.status==='CHECKED_IN'?'<span class="bdg bc">✔ Checked In</span>':v.status==='NO_SHOW'?'<span class="bdg bns">✕ No Show</span>':'<span class="bdg bb">Booked</span>';
+      const wbdg=v.wi?'<span class="bdg bw">🚶 Walk-In</span>':'';
+      const ctm=v.ci?`<div class="vt">✔ Checked in at ${new Date(v.ci).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`:'';
+      const axs=v.status==='BOOKED'
+        ?`<button class="btn bg bsm" onclick="checkIn(${i})">✔ Check In</button><button class="btn br bsm" onclick="noShow(${i})">✕ No Show</button>`
+        :`<button class="btn bo bsm" onclick="undo(${i})">↩ Undo</button>`;
+      const noteBlock=v.notes
+        ?`<div class="nexist">📝 ${v.notes}</div><button class="ntog" onclick="togNote(${i})">Edit note ✎</button>`
+        :`<button class="ntog" onclick="togNote(${i})">+ Add note</button>`;
+      const d=document.createElement('div');
+      d.className=`vc ${cls}`;
+      d.innerHTML=`<div class="vc-body"><div class="av" style="background:${col(v.name)}">${ini(v.name)}</div><div class="vi"><div class="vn">${v.name} ${sbdg} ${wbdg}</div><div class="vct">${v.phone?`<span>📞 ${v.phone}</span>`:''}${v.email?`<span>✉️ ${v.email}</span>`:'<span style="color:var(--red)">⚠ No email</span>'}</div>${ctm}</div><div class="vax">${axs}</div></div><div class="vnr">${noteBlock}</div><div style="padding:0 16px 12px 68px;display:none" id="na${i}"><textarea class="narea" placeholder="Notes about this visitor…" oninput="updNote(${i},this.value)">${v.notes||''}</textarea></div>`;
+      list.appendChild(d);
+    });
+  }
+
+  function togNote(i){const a=document.getElementById('na'+i);if(a){a.style.display=a.style.display==='none'||!a.style.display?'':'none';if(a.style.display==='')a.querySelector('textarea').focus()}}
+
+  function renderAP(){
+    const list=document.getElementById('ap-list');
+    const q=document.getElementById('ap-q').value.toLowerCase();
+    const elig=V.filter(v=>v.status==='CHECKED_IN');
+    const rows=elig.filter(v=>v.name.toLowerCase().includes(q)||(v.notes||'').toLowerCase().includes(q));
+    const selCnt=rows.filter(v=>v.ok&&!v.sent).length;
+    const bb=document.getElementById('bbar');
+    bb.classList.toggle('hide',selCnt===0);
+    if(selCnt>0)document.getElementById('bbar-txt').textContent=`${selCnt} approved — ready to send invitations`;
+    if(!rows.length){list.innerHTML=`<div class="empty"><div class="empty-ic">🏠</div><div class="empty-tl">No checked-in visitors yet</div></div>`;stats();return}
+    list.innerHTML='';
+    rows.forEach(v=>{
+      const i=V.indexOf(v);
+      const sbdg=v.sent?'<span class="bdg biv">✉️ Invited</span>':v.ok?'<span class="bdg bap">✔ Approved</span>':'<span class="bdg bpd">Pending</span>';
+      const wbdg=v.wi?'<span class="bdg bw">🚶 Walk-In</span>':'';
+      const d=document.createElement('div');
+      d.className=`ac ${v.sent?'invd':v.ok?'app':''}`;
+      d.innerHTML=`<div class="ac-body"><div class="achk"><input type="checkbox" ${v.ok?'checked':''} ${v.sent?'disabled':''} onchange="togApp(${i},this.checked)"/></div><div class="av" style="background:${col(v.name)}">${ini(v.name)}</div><div class="a-inf"><div class="an">${v.name} ${sbdg} ${wbdg}</div><div class="am">${v.phone?`<span>📞 ${v.phone}</span>`:''}${v.email?`<span>✉️ ${v.email}</span>`:'<span style="color:var(--red)">⚠ No email — cannot invite</span>'}<span class="mono" style="font-size:11px">Checked in ${new Date(v.ci).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span></div>${v.notes?`<div class="anote">📝 ${v.notes}</div>`:''}</div><div style="margin-left:auto;padding-left:12px"><button class="itog ${v.hi?'on':''}" onclick="togHI(${i})">★ ${v.hi?'High Interest':'Interest'}</button></div></div>`;
+      list.appendChild(d);
+    });
+    stats();
+  }
+
+  function prevInvites(){
+    const ap=V.filter(v=>v.ok&&!v.sent);
+    const el=document.getElementById('ipreview');
+    if(!el)return;
+    if(!ap.length){el.innerHTML=`<div style="font-size:13px;color:var(--muted);text-align:center;padding:14px 0">No visitors approved yet.</div>`;return}
+    el.innerHTML=ap.map(v=>{
+      const m=v.email?'email':v.phone?'sms':'none';
+      const mb=m==='email'?'<span class="ir-m irm-e">✉️ Email</span>':m==='sms'?'<span class="ir-m irm-s">📱 SMS</span>':'<span class="ir-m irm-n">⚠ No contact</span>';
+      return `<div class="ir"><div style="width:26px;height:26px;border-radius:50%;background:${col(v.name)};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">${ini(v.name)}</div><span class="ir-n">${v.name}</span><span class="ir-c">${v.email||v.phone||'—'}</span>${mb}</div>`;
+    }).join('');
+  }
+
+  function checkIn(i){V[i].status='CHECKED_IN';V[i].ci=Date.now();save();renderCI();toast(`✅ ${V[i].name} checked in!`)}
+  function noShow(i){V[i].status='NO_SHOW';save();renderCI();toast(`⚠ ${V[i].name} marked as no show`)}
+  function undo(i){V[i].status='BOOKED';V[i].ci=null;V[i].ok=false;save();renderCI();toast(`↩ ${V[i].name} reset to Booked`)}
+  function updNote(i,t){V[i].notes=t;save()}
+  function togApp(i,c){V[i].ok=c;save();renderAP()}
+  function togHI(i){V[i].hi=!V[i].hi;save();renderAP();toast(V[i].hi?`⭐ ${V[i].name} marked high interest`:`${V[i].name} — interest removed`)}
+  function selAll(c){V.filter(v=>v.status==='CHECKED_IN'&&!v.sent).forEach(v=>v.ok=c);save();renderAP()}
+  function selHI(){V.filter(v=>v.status==='CHECKED_IN'&&v.hi&&!v.sent).forEach(v=>v.ok=true);save();renderAP();toast('⭐ High interest visitors selected')}
+
+  function addWalkin(){
+    const n=document.getElementById('wi-n').value.trim();
+    const p=document.getElementById('wi-p').value.trim();
+    const e=document.getElementById('wi-e').value.trim();
+    if(!n){toast('⚠ Visitor name is required');return}
+    V.push({id:nid++,name:n,phone:p,email:e,status:'CHECKED_IN',notes:'',ci:Date.now(),wi:true,ok:false,hi:false,sent:false});
+    document.getElementById('wi-n').value='';
+    document.getElementById('wi-p').value='';
+    document.getElementById('wi-e').value='';
+    save();renderCI();toast(`🚶 ${n} added as walk-in and checked in!`);
+  }
+
+  function openM(id){
+    if(id==='sendModal'){
+      const ap=V.filter(v=>v.ok&&!v.sent);
+      if(!ap.length){toast('⚠ No approved visitors to send to');return}
+      document.getElementById('send-msb').innerHTML=`Send temp login links pre-loaded with <strong>12 Example Street</strong> to <strong>${ap.length} visitor${ap.length!==1?'s':''}?</strong> Links expire in 48 hours.`;
+      document.getElementById('send-mlist').innerHTML=ap.map(v=>`<div class="modal-row"><div style="width:26px;height:26px;border-radius:50%;background:${col(v.name)};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">${ini(v.name)}</div><span style="flex:1;font-weight:600">${v.name}</span><span style="font-size:12px;color:var(--muted)">${v.email||v.phone||'⚠ No contact'}</span></div>`).join('');
+    }
+    if(id==='endModal'){
+      const ck=V.filter(v=>v.status==='CHECKED_IN').length;
+      const ns=V.filter(v=>v.status==='NO_SHOW').length;
+      const wk=V.filter(v=>v.wi).length;
+      const inv=V.filter(v=>v.sent).length;
+      document.getElementById('end-stats').innerHTML=`<div class="end-stat-item"><div class="end-stat-val" style="color:var(--gd)">${ck}</div><div class="end-stat-lbl">Checked In</div></div><div class="end-stat-item"><div class="end-stat-val" style="color:var(--red)">${ns}</div><div class="end-stat-lbl">No Show</div></div><div class="end-stat-item"><div class="end-stat-val" style="color:var(--purple)">${wk}</div><div class="end-stat-lbl">Walk-Ins</div></div><div class="end-stat-item"><div class="end-stat-val" style="color:var(--accent)">${inv}</div><div class="end-stat-lbl">Invited</div></div>`;
+    }
+    document.getElementById(id).classList.add('open');
+  }
+  function closeM(id){document.getElementById(id).classList.remove('open')}
+  document.querySelectorAll('.mov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+
+  function confirmSend(){
+    const ap=V.filter(v=>v.ok&&!v.sent);
+    ap.forEach(v=>v.sent=true);
+    save();closeM('sendModal');renderAP();
+    const cb=document.getElementById('cbanner');
+    document.getElementById('cbt').textContent=`✅ ${ap.length} invitation${ap.length!==1?'s':''} sent! Each visitor received a temp login link for 12 Example Street.`;
+    document.getElementById('cbtime').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    cb.classList.add('show');
+    document.getElementById('send-btn').disabled=true;
+    document.getElementById('send-btn').textContent='✔ Invitations Sent';
+    toast(`✉️ ${ap.length} invitation${ap.length!==1?'s':''} sent!`);
+    setTimeout(()=>cb.classList.remove('show'),8000);
+  }
+
+  function confirmEnd(){
+    closeM('endModal');
+    toast('✅ Inspection ended. Redirecting to Appointments…');
+    setTimeout(()=>{window.location.href='appointments.html'},1200);
+  }
+
+  function exportCSV(){
+    if(!V.length)return;
+    const rows=[['Name','Phone','Email','Status','Checked In','Notes','Walk-In'],...V.map(v=>[`"${v.name}"`,`"${v.phone||''}"`,`"${v.email||''}"`,v.status,v.ci?new Date(v.ci).toLocaleString():'',`"${(v.notes||'').replace(/"/g,'""')}"`,v.wi?'Yes':'No'])];
+    dl(rows,'inspection-attendance');
+  }
+  function exportApproved(){
+    const ap=V.filter(v=>v.ok);
+    if(!ap.length){toast('⚠ No approved visitors to export');return}
+    const rows=[['Name','Phone','Email','Notes','Checked In','Invited'],...ap.map(v=>[`"${v.name}"`,`"${v.phone||''}"`,`"${v.email||''}"`,`"${(v.notes||'').replace(/"/g,'""')}"`,v.ci?new Date(v.ci).toLocaleString():'',v.sent?'Yes':'No'])];
+    dl(rows,'approved-applicants');
+  }
+  function dl(rows,name){const csv=rows.map(r=>r.join(',')).join('\n');const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`${name}-${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(u);toast('⬇ CSV downloaded!')}
+
+  function toast(msg){const t=document.getElementById('toast');document.getElementById('tmsg').textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3500)}
+
+  ciF('all');renderCI();stats();
+  // Open correct tab from URL hash
+  if(window.location.hash === '#approval') switchTab('ap');
+</script>
+</body>
+</html>

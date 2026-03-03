@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>PropertyPortal — Appointments</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      /* ── Base (matches all pages) ── */
+      --bg: #eef0f4;
+      --card: #ffffff;
+      --border: #e2e6ed;
+      --txt: #131b2e;
+      --sec: #5a6478;
+      --muted: #9aa1b1;
+      --accent: #3b7bff;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --purple: #8b5cf6;
+      /* ── Sidebar vars (shared with owner-home/add-property) ── */
+      --sidebar-bg: #0f1623;
+      --sidebar-text: #8a96aa;
+      --sidebar-active: #ffffff;
+      --radius: 12px;
+      --radius-sm: 8px;
+      /* ── Shorthand aliases ── */
+      --al: #edf2ff; --ah: #2563eb;
+      --gl: #f0fdf4; --gd: #16a34a;
+      --ambl: #fffbeb;
+      --rl: #fef2f2;
+      --pl: #f5f3ff;
+      --sh: 0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+      --shm: 0 4px 16px rgba(0,0,0,.08);
+      --shl: 0 12px 32px rgba(0,0,0,.14);
+      --r: 12px; --rs: 8px;
+    }
+    *,*::before,*::after { box-sizing:border-box;margin:0;padding:0 }
+    body { font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;overflow:hidden }
+
+    /* ── SIDEBAR ──────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   CANONICAL SIDEBAR — used across all PropertyPortal pages
+   ═══════════════════════════════════════════════════════ */
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.sidebar-brand {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.sidebar-brand .logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.sidebar-brand h1 { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -.2px; }
+.sidebar-brand span { font-size: 11px; color: var(--sidebar-text); }
+.sidebar-nav { padding: 14px 12px; flex: 1; overflow-y: auto; }
+.nav-label {
+  font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,.2);
+  letter-spacing: 1.2px; text-transform: uppercase;
+  padding: 12px 8px 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px; border-radius: var(--radius-sm);
+  color: var(--sidebar-text); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all .15s;
+  margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+.nav-item.active { background: rgba(59,123,255,.18); color: var(--sidebar-active); }
+.nav-item .icon { width: 18px; height: 18px; opacity: .65; flex-shrink: 0; }
+.nav-item.active .icon { opacity: 1; }
+.nav-badge {
+  margin-left: auto; background: var(--accent);
+  color: #fff; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 20px;
+}
+.nav-badge.amber { background: var(--amber); }
+.nav-badge.green { background: var(--green); }
+.nav-badge.purple { background: var(--purple); }
+
+/* Sub-nav (Appointments children) */
+.nav-sub {
+  margin-left: 28px; margin-top: 2px; margin-bottom: 4px;
+}
+.nav-sub-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  color: rgba(255,255,255,.4); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all .15s;
+  margin-bottom: 1px; text-decoration: none;
+}
+.nav-sub-item::before { content: '•'; color: rgba(255,255,255,.2); font-size: 11px; }
+.nav-sub-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+.nav-sub-item.active { background: rgba(59,123,255,.22); color: #fff; font-weight: 600; }
+.nav-sub-item.active::before { color: #fff; }
+
+.sidebar-footer {
+  padding: 14px 12px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.user-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px; border-radius: var(--radius-sm); cursor: pointer;
+}
+.user-card:hover { background: rgba(255,255,255,.06); }
+.avatar {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg,#3b7bff,#6c3bff);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 13px; font-weight: 700;
+  color: #fff; flex-shrink: 0;
+}
+.user-info { flex: 1; overflow: hidden; }
+.user-info .name { font-size: 13px; font-weight: 600; color: #fff; }
+.user-info .role { font-size: 11px; color: var(--sidebar-text); }
+.user-card .dots { color: var(--sidebar-text); font-size: 16px; }
+
+
+    /* ── MAIN ── */
+    .main { flex:1;display:flex;flex-direction:column;overflow-y:auto;max-height:100vh }
+
+    /* ── TOP BAR ── */
+    .topbar { background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh) }
+    .tb-left { display:flex;align-items:center;gap:14px }
+    .tb-title { font-size:17px;font-weight:700;color:var(--txt) }
+    .tb-sub { font-size:13px;color:var(--sec);margin-top:1px }
+    .tb-right { display:flex;align-items:center;gap:10px }
+    .live-badge { display:flex;align-items:center;gap:7px;background:var(--gl);border:1px solid #bbf7d0;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:700;color:#166534 }
+    .live-dot { width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 1.6s infinite }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.35} }
+
+    /* ── BUTTONS ── */
+    .btn { display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:var(--rs);border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap }
+    .btn:hover { opacity:.88 }
+    .bp { background:var(--accent);color:#fff }.bp:hover{background:var(--ah)}
+    .bg { background:var(--green);color:#fff }.bg:hover{background:var(--gd)}
+    .br { background:var(--red);color:#fff }
+    .ba { background:var(--amber);color:#fff }
+    .bo { background:var(--card);color:var(--txt);border:1.5px solid var(--border) }.bo:hover{border-color:var(--accent);color:var(--accent)}
+    .bgh { background:none;color:var(--muted);border:1px solid var(--border) }.bgh:hover{background:var(--bg);color:var(--txt)}
+    .bsm { padding:7px 12px;font-size:12px }
+    .bxs { padding:5px 10px;font-size:11px }
+
+    /* ── CONTENT ── */
+    .content { padding:22px 28px;display:flex;flex-direction:column;gap:0 }
+
+    /* ── SUMMARY STATS ── */
+    .summary { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px }
+    .sum-card { background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);border-left:4px solid transparent }
+    .sum-card.sc-blue  { border-left-color:var(--accent) }
+    .sum-card.sc-green { border-left-color:var(--green) }
+    .sum-card.sc-amber { border-left-color:var(--amber) }
+    .sum-card.sc-purple{ border-left-color:var(--purple) }
+    .sum-val { font-size:26px;font-weight:700;font-family:'DM Mono',monospace;line-height:1 }
+    .sc-blue  .sum-val { color:var(--accent) }
+    .sc-green .sum-val { color:var(--gd) }
+    .sc-amber .sum-val { color:var(--amber) }
+    .sc-purple .sum-val { color:var(--purple) }
+    .sum-lbl { font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:5px }
+
+    /* ── FILTER BAR ── */
+    .filter-bar { display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap }
+    .sbox { display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:0 12px;min-width:200px;max-width:260px }
+    .sbox svg { color:var(--muted);flex-shrink:0 }
+    .sbox input { border:none;outline:none;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--txt);background:none;padding:10px 0;width:100% }
+    .sbox input::placeholder { color:var(--muted) }
+    .fselect { appearance:none;background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa1b1' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 11px center;border:1px solid var(--border);border-radius:var(--rs);padding:9px 32px 9px 12px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--txt);cursor:pointer;outline:none;transition:border-color .15s;min-width:180px }
+    .fselect:focus { border-color:var(--accent) }
+    .fselect.active { border-color:var(--accent);color:var(--accent);background-color:var(--al) }
+    .date-filter-wrap { display:flex;align-items:center;gap:6px }
+    .date-input { background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--txt);outline:none;cursor:pointer;transition:border-color .15s }
+    .date-input:focus { border-color:var(--accent) }
+    .date-input.active { border-color:var(--accent);background:var(--al) }
+    .date-sep { font-size:12px;color:var(--muted);font-weight:600 }
+    .filter-divider { width:1px;height:28px;background:var(--border) }
+    .filter-pills { display:flex;gap:6px;flex-wrap:wrap }
+    .fpill { padding:7px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--sec);transition:all .15s }
+    .fpill:hover { border-color:var(--accent);color:var(--accent) }
+    .fpill.on { background:var(--accent);color:#fff;border-color:var(--accent) }
+    .fpill.fp-live.on { background:var(--green);border-color:var(--green) }
+    .fpill.fp-sched.on { background:var(--accent);border-color:var(--accent) }
+    .fpill.fp-done.on  { background:var(--muted);border-color:var(--muted) }
+    .clear-filters { font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;padding:7px 10px;border-radius:var(--rs);transition:background .15s }
+    .clear-filters:hover { background:var(--al) }
+    .clear-filters.hidden { display:none }
+
+    /* ── PROPERTY GROUP ── */
+    .prop-group { margin-bottom:28px }
+    .prop-group-hd { display:flex;align-items:center;gap:14px;margin-bottom:12px }
+    .prop-thumb { width:56px;height:42px;border-radius:var(--rs);overflow:hidden;flex-shrink:0;border:1px solid var(--border) }
+    .prop-thumb img { width:100%;height:100%;object-fit:cover;display:block }
+    .prop-name { font-size:15px;font-weight:700;color:var(--txt) }
+    .prop-meta { font-size:12px;color:var(--muted);margin-top:2px;display:flex;gap:10px }
+    .prop-slot-count { margin-left:auto;font-size:12px;font-weight:600;color:var(--sec);white-space:nowrap }
+
+    /* ── SLOT CARDS ── */
+    .slots-grid { display:flex;flex-direction:column;gap:10px }
+    .slot-card { background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);display:flex;align-items:center;gap:0;overflow:hidden;transition:all .15s }
+    .slot-card:hover { box-shadow:var(--shm);border-color:#c7d9ff }
+
+    /* left color stripe based on status */
+    .slot-card.live   { border-color:#bbf7d0 }
+    .slot-card.scheduled { border-color:#c7d9ff }
+    .slot-card.completed { border-color:var(--border);opacity:.8 }
+    .slot-card.cancelled { border-color:#fecaca;opacity:.7 }
+
+    .slot-stripe { width:5px;min-height:100%;flex-shrink:0;align-self:stretch }
+    .slot-card.live .slot-stripe       { background:var(--green) }
+    .slot-card.scheduled .slot-stripe  { background:var(--accent) }
+    .slot-card.completed .slot-stripe  { background:var(--muted) }
+    .slot-card.cancelled .slot-stripe  { background:var(--red) }
+
+    .slot-main { display:flex;align-items:center;gap:16px;padding:14px 18px;flex:1;min-width:0 }
+
+    /* date block */
+    .slot-date-block { flex-shrink:0;text-align:center;min-width:52px }
+    .slot-day { font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--txt);line-height:1 }
+    .slot-month { font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px }
+    .slot-dow { font-size:10px;font-weight:600;color:var(--sec) }
+
+    .slot-divider { width:1px;height:44px;background:var(--border);flex-shrink:0 }
+
+    /* time + details */
+    .slot-info { flex:1;min-width:0 }
+    .slot-time { font-size:14px;font-weight:700;color:var(--txt);font-family:'DM Mono',monospace }
+    .slot-duration { font-size:12px;color:var(--muted);margin-top:2px }
+
+    /* bookings */
+    .slot-bookings { flex-shrink:0;text-align:center;min-width:70px }
+    .sb-val { font-size:20px;font-weight:700;font-family:'DM Mono',monospace;color:var(--txt);line-height:1 }
+    .sb-lbl { font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px }
+    .sb-bar-wrap { width:64px;height:4px;background:var(--border);border-radius:2px;margin-top:5px }
+    .sb-bar { height:4px;border-radius:2px;background:var(--accent);transition:width .3s }
+    .slot-card.live .sb-bar { background:var(--green) }
+    .slot-card.completed .sb-bar { background:var(--muted) }
+
+    /* status badge */
+    .slot-status { flex-shrink:0 }
+    .status-badge { display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700 }
+    .sb-live      { background:var(--gl);color:#166534;border:1px solid #bbf7d0 }
+    .sb-scheduled { background:var(--al);color:#1e40af;border:1px solid #c7d9ff }
+    .sb-completed { background:#f1f5f9;color:var(--sec);border:1px solid var(--border) }
+    .sb-cancelled { background:var(--rl);color:#991b1b;border:1px solid #fecaca }
+    .sb-live::before { content:'';display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 1.6s infinite }
+
+    /* actions */
+    .slot-actions { display:flex;align-items:center;gap:8px;padding:14px 18px 14px 0;flex-shrink:0 }
+
+    /* attendees micro-list on completed */
+    .slot-attended { display:flex;align-items:center;gap:-4px;padding-left:4px }
+    .att-av { width:22px;height:22px;border-radius:50%;border:2px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;margin-left:-4px;first-child{margin-left:0} }
+    .att-more { background:var(--muted);color:#fff;font-size:9px;font-weight:700;width:22px;height:22px;border-radius:50%;border:2px solid var(--card);display:flex;align-items:center;justify-content:center;margin-left:-4px }
+
+    /* ── EMPTY STATE ── */
+    .empty { text-align:center;padding:56px 24px;color:var(--muted) }
+    .empty-ic { font-size:44px;margin-bottom:14px }
+    .empty-tl { font-size:16px;font-weight:700;color:var(--sec);margin-bottom:6px }
+    .empty-sub { font-size:13px }
+
+    /* ── MODAL ── */
+    .mov { position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:400;opacity:0;pointer-events:none;transition:opacity .2s }
+    .mov.open { opacity:1;pointer-events:all }
+    .modal { background:#fff;border-radius:16px;padding:26px;max-width:480px;width:100%;margin:20px;box-shadow:var(--shl);transform:translateY(10px);transition:transform .2s;position:relative }
+    .mov.open .modal { transform:translateY(0) }
+    .modal-close { position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted) }
+    .modal-title { font-size:17px;font-weight:700;margin-bottom:3px }
+    .modal-sub { font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.5 }
+    .modal-acts { display:flex;gap:10px;margin-top:18px }
+    .m-cancel { flex:1;padding:11px;background:var(--bg);color:var(--txt);border:1px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif }
+    .m-ok { flex:1;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;color:#fff }
+    .m-ok.green { background:var(--green) }.m-ok.green:hover{background:var(--gd)}
+    .m-ok.red   { background:var(--red) }
+    .m-ok.amber { background:var(--amber) }
+    .modal-info { background:var(--al);border:1px solid #c7d9ff;border-radius:var(--rs);padding:12px 14px;font-size:13px;color:#1e40af;margin-bottom:16px;line-height:1.6 }
+    .modal-detail-row { display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px }
+    .modal-detail-row:last-child { border-bottom:none }
+    .modal-detail-row span:first-child { color:var(--muted);font-weight:500 }
+    .modal-detail-row span:last-child { font-weight:600;color:var(--txt) }
+
+    /* ── RESULTS MODAL ── */
+    .result-row { display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px }
+    .result-row:last-child { border-bottom:none }
+    .r-av { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0 }
+    .r-name { flex:1;font-weight:600 }
+    .r-badge { font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px }
+    .rb-in { background:var(--gl);color:#166534;border:1px solid #bbf7d0 }
+    .rb-ns { background:var(--rl);color:#991b1b;border:1px solid #fecaca }
+    .rb-wi { background:var(--pl);color:#5b21b6;border:1px solid #ddd6fe }
+
+    /* ── TOAST ── */
+    .toast { position:fixed;bottom:24px;right:24px;background:#1e293b;color:#fff;padding:13px 18px;border-radius:10px;box-shadow:var(--shl);font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;z-index:500;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:340px }
+    .toast.show { transform:translateY(0);opacity:1 }
+    .mono { font-family:'DM Mono',monospace }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mark">
+          <div class="logo-icon">🏠</div>
+          <div>
+            <h1>PropertyPortal</h1>
+            <span>Management System</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main</div>
+        <a class="nav-item " href="properties.html">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Properties
+        </a>
+        <a class="nav-item active" href="appointments.html">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Appointments
+          <span class="nav-badge green">2 Live</span>
+        </a>
+        <div class="nav-sub">
+          <a class="nav-sub-item active" href="appointments.html">All Inspections</a>
+          <a class="nav-sub-item " href="inspection.html">Check-In</a>
+          <a class="nav-sub-item " href="inspection.html#approval">Approval</a>
+        </div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Agents
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          Applications
+          <span class="nav-badge">7</span>
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          Tenancy
+          <span class="nav-badge green">5</span>
+        </a>
+
+        <div class="nav-label" style="margin-top:8px">Reports &amp; Feedback</div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          PCR
+          <span class="nav-badge amber">2</span>
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Feedback
+          <span class="nav-badge purple">12</span>
+        </a>
+
+        <div class="nav-label" style="margin-top:8px">Manage</div>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Owner Profile
+        </a>
+        <a class="nav-item " href="#">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="avatar">SR</div>
+          <div class="user-info">
+            <div class="name">Sarah Robertson</div>
+            <div class="role">Product Owner</div>
+          </div>
+          <div class="dots">⋯</div>
+        </div>
+      </div>
+    </aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="live-badge"><div class="live-dot"></div>2 Live Now</div>
+      <div>
+        <div class="tb-title">Appointments</div>
+        <div class="tb-sub">Tuesday, 3 March 2026</div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <button class="btn bo bsm" onclick="toast('📊 Exporting schedule…')">⬇ Export</button>
+      <button class="btn bp bsm" onclick="openAddModal()">+ New Inspection</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SUMMARY STATS -->
+    <div class="summary">
+      <div class="sum-card sc-blue"><div class="sum-val" id="s-total">0</div><div class="sum-lbl">Total Inspections</div></div>
+      <div class="sum-card sc-green"><div class="sum-val" id="s-live">0</div><div class="sum-lbl">Live Now</div></div>
+      <div class="sum-card sc-amber"><div class="sum-val" id="s-sched">0</div><div class="sum-lbl">Scheduled</div></div>
+      <div class="sum-card sc-purple"><div class="sum-val" id="s-done">0</div><div class="sum-lbl">Completed</div></div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar" style="flex-direction:column;align-items:stretch;gap:10px">
+
+      <!-- Row 1: Search + Property dropdown -->
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="sbox">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="q-search" placeholder="Search by address…" oninput="applyFilters()"/>
+        </div>
+        <select class="fselect" id="prop-filter" onchange="applyFilters()">
+          <option value="">All Properties</option>
+        </select>
+        <div class="filter-divider"></div>
+        <div class="date-filter-wrap">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--muted);flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <input type="date" class="date-input" id="date-from" onchange="applyFilters()" title="From date"/>
+          <span class="date-sep">→</span>
+          <input type="date" class="date-input" id="date-to" onchange="applyFilters()" title="To date"/>
+          <button class="btn bgh bsm" onclick="clearDateFilter()" id="date-clear" style="display:none;padding:5px 9px;font-size:11px">✕</button>
+        </div>
+        <span class="clear-filters hidden" id="clear-all-btn" onclick="clearAllFilters()">✕ Clear all</span>
+        <div style="margin-left:auto;font-size:12px;color:var(--muted)" id="result-count"></div>
+      </div>
+
+      <!-- Row 2: Status pills -->
+      <div class="filter-pills">
+        <div class="fpill on"        id="f-all"       onclick="setFilter('all')">All</div>
+        <div class="fpill fp-live"   id="f-live"      onclick="setFilter('live')">🟢 Live</div>
+        <div class="fpill fp-sched"  id="f-scheduled" onclick="setFilter('scheduled')">📅 Scheduled</div>
+        <div class="fpill fp-done"   id="f-completed" onclick="setFilter('completed')">✔ Completed</div>
+        <div class="fpill"           id="f-cancelled" onclick="setFilter('cancelled')">✕ Cancelled</div>
+      </div>
+
+    </div>
+
+    <!-- PROPERTY GROUPS -->
+    <div id="groups-container"></div>
+
+  </div>
+</main>
+
+<!-- START INSPECTION MODAL -->
+<div class="mov" id="startModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeM('startModal')">✕</button>
+    <div class="modal-title">🟢 Start Inspection</div>
+    <div class="modal-sub" id="start-sub">Ready to begin check-in for this session?</div>
+    <div class="modal-info">Once started, the inspection goes <strong>Live</strong> and the Check-In screen becomes active. Visitors can be checked in, walk-ins added, and the timer begins.</div>
+    <div id="start-details"></div>
+    <div class="modal-acts">
+      <button class="m-cancel" onclick="closeM('startModal')">Cancel</button>
+      <button class="m-ok green" onclick="confirmStart()">Start Inspection →</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW RESULTS MODAL -->
+<div class="mov" id="resultsModal">
+  <div class="modal" style="max-width:500px">
+    <button class="modal-close" onclick="closeM('resultsModal')">✕</button>
+    <div class="modal-title" id="results-title">Past Attendees</div>
+    <div class="modal-sub" id="results-sub"></div>
+    <div id="results-list"></div>
+    <div class="modal-acts">
+      <button class="m-cancel" onclick="closeM('resultsModal')">Close</button>
+      <button class="m-ok green" onclick="toast('📄 CSV exported!');closeM(\'resultsModal\')">Export CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL MODAL -->
+<div class="mov" id="cancelModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeM('cancelModal')">✕</button>
+    <div class="modal-title">✕ Cancel Inspection</div>
+    <div class="modal-sub" id="cancel-sub">Are you sure you want to cancel this inspection slot? This will notify all booked visitors.</div>
+    <div id="cancel-details"></div>
+    <div class="modal-acts">
+      <button class="m-cancel" onclick="closeM('cancelModal')">Keep It</button>
+      <button class="m-ok red" onclick="confirmCancel()">Yes, Cancel Slot</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESCHEDULE MODAL -->
+<div class="mov" id="reschedModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeM('reschedModal')">✕</button>
+    <div class="modal-title">📅 Reschedule</div>
+    <div class="modal-sub" id="resched-sub">Select a new date and time for this inspection.</div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:4px">
+      <div><label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px">New Date</label><input type="date" id="resched-date" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:14px;font-family:'DM Sans',sans-serif;outline:none"/></div>
+      <div style="display:flex;gap:10px">
+        <div style="flex:1"><label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px">Start Time</label><input type="time" id="resched-start" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:14px;font-family:'DM Sans',sans-serif;outline:none"/></div>
+        <div style="flex:1"><label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px">End Time</label><input type="time" id="resched-end" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:14px;font-family:'DM Sans',sans-serif;outline:none"/></div>
+      </div>
+    </div>
+    <div class="modal-acts">
+      <button class="m-cancel" onclick="closeM('reschedModal')">Cancel</button>
+      <button class="m-ok amber" onclick="confirmResched()">Confirm Reschedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD INSPECTION MODAL -->
+<div class="mov" id="addModal">
+  <div class="modal" style="max-width:520px">
+    <button class="modal-close" onclick="closeM('addModal')">✕</button>
+    <div class="modal-title">📅 Add New Inspection</div>
+    <div class="modal-sub">Schedule an inspection slot for one of your properties.</div>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:4px">
+
+      <div>
+        <label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px">Property *</label>
+        <select id="add-prop" style="width:100%;appearance:none;background:var(--bg) url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa1b1' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\") no-repeat right 11px center;border:1px solid var(--border);border-radius:var(--rs);padding:10px 32px 10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--txt);outline:none">
+          <option value="">Select a property…</option>
+        </select>
+      </div>
+
+      <!-- Selected property preview -->
+      <div id="add-prop-preview" style="display:none;background:#f8fafc;border:1px solid var(--border);border-radius:var(--rs);padding:12px;display:none;align-items:center;gap:10px">
+        <div style="width:48px;height:36px;border-radius:6px;overflow:hidden;flex-shrink:0"><img id="add-prev-img" src="" style="width:100%;height:100%;object-fit:cover"/></div>
+        <div><div id="add-prev-name" style="font-size:13px;font-weight:700;color:var(--txt)"></div><div id="add-prev-meta" style="font-size:12px;color:var(--muted);margin-top:2px"></div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div>
+          <label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px">Date *</label>
+          <input type="date" id="add-date" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)"/>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px">Start Time *</label>
+          <input type="time" id="add-start" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)"/>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px">End Time *</label>
+          <input type="time" id="add-end" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)"/>
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px">Visitor Capacity</label>
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="number" id="add-capacity" value="8" min="1" max="50" style="width:100px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg)"/>
+          <span style="font-size:12px;color:var(--muted)">Maximum visitors allowed at this inspection</span>
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:11px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px">Notes (optional)</label>
+        <textarea id="add-notes" rows="2" placeholder="Any special instructions for this slot…" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;resize:none;outline:none;background:var(--bg)"></textarea>
+      </div>
+
+      <div id="add-error" style="display:none;background:var(--rl);border:1px solid #fecaca;border-radius:var(--rs);padding:10px 13px;font-size:13px;color:#991b1b;font-weight:600"></div>
+    </div>
+    <div class="modal-acts">
+      <button class="m-cancel" onclick="closeM('addModal')">Cancel</button>
+      <button class="m-ok green" onclick="confirmAdd()">Add Inspection</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="tmsg"></span></div>
+
+<script>
+  // ── DATA ──
+  const AVATAR_COLORS = [
+    'linear-gradient(135deg,#3b7bff,#6c3bff)',
+    'linear-gradient(135deg,#22c55e,#16a34a)',
+    'linear-gradient(135deg,#f59e0b,#d97706)',
+    'linear-gradient(135deg,#8b5cf6,#6d28d9)',
+    'linear-gradient(135deg,#ef4444,#dc2626)',
+    'linear-gradient(135deg,#06b6d4,#0284c7)',
+  ];
+  const ini = n => n.split(' ').map(w => w[0]||'').join('').toUpperCase().slice(0,2);
+  const avcol = n => { let h=0; for(let c of n) h=(h*31+c.charCodeAt(0))%AVATAR_COLORS.length; return AVATAR_COLORS[h]; };
+
+  // ── CANONICAL PROPERTY LIST (shared with properties.html + proprtyrDetail.html) ──
+  const PROPERTIES = [
+    { id:'p1', name:'12 Lakeview Street',    suburb:'Perth WA 6000',         fullAddr:'12 Lakeview Street, Perth WA 6000',         type:'Apartment · 2 Bed · 2 Bath', price:'$650/wk', img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200' },
+    { id:'p2', name:'45 Riverside Drive',    suburb:'South Perth WA 6151',   fullAddr:'45 Riverside Drive, South Perth WA 6151',   type:'House · 3 Bed · 2 Bath',      price:'$890/wk', img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=200' },
+    { id:'p3', name:'8 Sunset Boulevard',    suburb:'Fremantle WA 6160',     fullAddr:'8 Sunset Boulevard, Fremantle WA 6160',     type:'Townhouse · 2 Bed · 1 Bath',  price:'$720/wk', img:'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=200' },
+    { id:'p4', name:'22 Ocean View Terrace', suburb:'Cottesloe WA 6011',     fullAddr:'22 Ocean View Terrace, Cottesloe WA 6011', type:'Studio · 1 Bed · 1 Bath',     price:'$420/wk', img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=200' },
+  ];
+  let properties = PROPERTIES; // alias for existing code
+
+  let inspections = [
+    // P1 — 12 Example St — two slots today (one live, one upcoming)
+    { id:'i1', propId:'p1', date:'2026-03-03', start:'10:00', end:'10:30', status:'live',
+      booked:5, capacity:8, checkedIn:3, noShow:1, walkins:1,
+      attendees:[
+        {name:'John Smith',   status:'CHECKED_IN',isWalkin:false},
+        {name:'Sarah Lee',    status:'CHECKED_IN',isWalkin:false},
+        {name:'David Kim',    status:'CHECKED_IN',isWalkin:true},
+        {name:'Mary White',   status:'NO_SHOW',   isWalkin:false},
+      ]
+    },
+    { id:'i2', propId:'p1', date:'2026-03-03', start:'11:00', end:'11:30', status:'scheduled',
+      booked:4, capacity:8, checkedIn:0, noShow:0, walkins:0, attendees:[] },
+
+    // P2 — 44 Riverside — one live right now
+    { id:'i3', propId:'p2', date:'2026-03-03', start:'09:30', end:'10:00', status:'live',
+      booked:6, capacity:8, checkedIn:5, noShow:1, walkins:2,
+      attendees:[
+        {name:'Emma Torres',  status:'CHECKED_IN',isWalkin:false},
+        {name:'Alex Brown',   status:'CHECKED_IN',isWalkin:true},
+        {name:'Lisa Park',    status:'CHECKED_IN',isWalkin:false},
+        {name:'Sam Nguyen',   status:'CHECKED_IN',isWalkin:true},
+        {name:'Chris Wilson', status:'CHECKED_IN',isWalkin:false},
+        {name:'Priya Sharma', status:'NO_SHOW',   isWalkin:false},
+      ]
+    },
+    { id:'i4', propId:'p2', date:'2026-03-08', start:'10:30', end:'11:00', status:'scheduled',
+      booked:2, capacity:8, checkedIn:0, noShow:0, walkins:0, attendees:[] },
+    { id:'i5', propId:'p2', date:'2026-03-08', start:'11:30', end:'12:00', status:'scheduled',
+      booked:3, capacity:8, checkedIn:0, noShow:0, walkins:0, attendees:[] },
+
+    // P3 — 7 Cottesloe — completed yesterday
+    { id:'i6', propId:'p3', date:'2026-03-02', start:'14:00', end:'14:30', status:'completed',
+      booked:7, capacity:8, checkedIn:5, noShow:2, walkins:1,
+      attendees:[
+        {name:'Jake Miller',  status:'CHECKED_IN',isWalkin:false},
+        {name:'Anna Chen',    status:'CHECKED_IN',isWalkin:false},
+        {name:'Tom Harris',   status:'CHECKED_IN',isWalkin:true},
+        {name:'Bella Singh',  status:'CHECKED_IN',isWalkin:false},
+        {name:'Oscar Reed',   status:'CHECKED_IN',isWalkin:false},
+        {name:'Mia Clark',    status:'NO_SHOW',   isWalkin:false},
+        {name:'Ryan Scott',   status:'NO_SHOW',   isWalkin:false},
+      ]
+    },
+    { id:'i7', propId:'p3', date:'2026-03-09', start:'10:00', end:'10:30', status:'scheduled',
+      booked:3, capacity:8, checkedIn:0, noShow:0, walkins:0, attendees:[] },
+
+    // P4 — 88 Subiaco — one cancelled
+    { id:'i8', propId:'p4', date:'2026-03-01', start:'15:00', end:'15:30', status:'cancelled',
+      booked:2, capacity:8, checkedIn:0, noShow:0, walkins:0, attendees:[] },
+    { id:'i9', propId:'p4', date:'2026-03-10', start:'11:00', end:'11:30', status:'scheduled',
+      booked:1, capacity:8, checkedIn:0, noShow:0, walkins:0, attendees:[] },
+  ];
+
+  // ── PERSIST INSPECTIONS TO LOCALSTORAGE ──
+  const LS_KEY = 'pp_inspections';
+
+  function saveInspections() {
+    localStorage.setItem(LS_KEY, JSON.stringify(inspections));
+  }
+
+  function loadInspections() {
+    try {
+      const stored = localStorage.getItem(LS_KEY);
+      if (stored) {
+        inspections = JSON.parse(stored);
+        // compute nextInspId from existing
+        const maxId = inspections.reduce((m, i) => {
+          const n = parseInt(i.id.replace('i','')) || 0;
+          return Math.max(m, n);
+        }, 9);
+        nextInspId = maxId + 1;
+      } else {
+        saveInspections(); // seed localStorage with defaults
+      }
+    } catch(e) { console.warn('Could not load inspections from localStorage', e); }
+  }
+
+  let activeFilter = 'all';
+  let activeModal = null;
+  let pendingSlotId = null;
+  let nextInspId = 10;
+
+  // ── POPULATE PROPERTY DROPDOWNS ──
+  function populatePropDropdowns() {
+    const filterSel = document.getElementById('prop-filter');
+    const addSel    = document.getElementById('add-prop');
+    properties.forEach(p => {
+      filterSel.innerHTML += `<option value="${p.id}">${p.name} — ${p.suburb}</option>`;
+      addSel.innerHTML    += `<option value="${p.id}">${p.name} — ${p.suburb}</option>`;
+    });
+    addSel.addEventListener('change', () => {
+      const pid  = addSel.value;
+      const prev = document.getElementById('add-prop-preview');
+      if (!pid) { prev.style.display='none'; return; }
+      const p = properties.find(x => x.id === pid);
+      document.getElementById('add-prev-img').src           = p.img;
+      document.getElementById('add-prev-name').textContent  = p.name;
+      document.getElementById('add-prev-meta').textContent  = `${p.suburb} · ${p.type} · ${p.price}`;
+      prev.style.display = 'flex';
+    });
+  }
+
+  // ── RENDER ──
+  function render() {
+    const q        = document.getElementById('q-search').value.toLowerCase();
+    const propSel  = document.getElementById('prop-filter').value;
+    const dateFrom = document.getElementById('date-from').value;
+    const dateTo   = document.getElementById('date-to').value;
+    const container = document.getElementById('groups-container');
+    container.innerHTML = '';
+
+    // Filter by status
+    let filtered = inspections.filter(i => {
+      if (activeFilter !== 'all' && i.status !== activeFilter) return false;
+      return true;
+    });
+
+    // Filter by date range
+    if (dateFrom) filtered = filtered.filter(i => i.date >= dateFrom);
+    if (dateTo)   filtered = filtered.filter(i => i.date <= dateTo);
+
+    // Group by property
+    const byProp = {};
+    filtered.forEach(i => {
+      if (!byProp[i.propId]) byProp[i.propId] = [];
+      byProp[i.propId].push(i);
+    });
+
+    // Filter by property dropdown + text search
+    const propIds = Object.keys(byProp).filter(pid => {
+      if (propSel && pid !== propSel) return false;
+      if (q) {
+        const p = properties.find(x => x.id === pid);
+        return p && (p.name.toLowerCase().includes(q) || p.suburb.toLowerCase().includes(q));
+      }
+      return true;
+    });
+
+    // Sort: live first, then scheduled, then completed/cancelled
+    const statusOrder = {live:0,scheduled:1,completed:2,cancelled:3};
+    propIds.sort((a,b) => {
+      const aMin = Math.min(...byProp[a].map(i => statusOrder[i.status]));
+      const bMin = Math.min(...byProp[b].map(i => statusOrder[i.status]));
+      return aMin - bMin;
+    });
+
+    if (!propIds.length) {
+      container.innerHTML = `<div class="empty"><div class="empty-ic">📅</div><div class="empty-tl">No inspections found</div><div class="empty-sub">Try adjusting your filters.</div></div>`;
+    } else {
+      propIds.forEach(pid => {
+        const prop = properties.find(p => p.id === pid);
+        const slots = byProp[pid].sort((a,b) => {
+          const ao = statusOrder[a.status], bo = statusOrder[b.status];
+          if (ao !== bo) return ao - bo;
+          return (a.date + a.start).localeCompare(b.date + b.start);
+        });
+        container.appendChild(buildGroup(prop, slots));
+      });
+    }
+
+    updateStats(filtered);
+    const tSlots = filtered.length, tProps = propIds.length;
+    document.getElementById('result-count').textContent =
+      tSlots + ' slot' + (tSlots!==1?'s':'') + ' across ' + tProps + ' propert' + (tProps!==1?'ies':'y');
+
+    // Active filter indicators
+    const hasFilters = q || propSel || dateFrom || dateTo || activeFilter !== 'all';
+    document.getElementById('clear-all-btn').classList.toggle('hidden', !hasFilters);
+    document.getElementById('prop-filter').classList.toggle('active', !!propSel);
+    document.getElementById('date-from').classList.toggle('active', !!dateFrom);
+    document.getElementById('date-to').classList.toggle('active', !!dateTo);
+    document.getElementById('date-clear').style.display = (dateFrom || dateTo) ? '' : 'none';
+  }
+
+  function buildGroup(prop, slots) {
+    const g = document.createElement('div');
+    g.className = 'prop-group';
+
+    const liveSlots = slots.filter(s => s.status === 'live').length;
+    const livePip = liveSlots ? `<span class="status-badge sb-live" style="margin-left:8px">${liveSlots} Live</span>` : '';
+
+    g.innerHTML = `
+      <div class="prop-group-hd">
+        <div class="prop-thumb"><img src="${prop.img}" alt="" loading="lazy"/></div>
+        <div>
+          <div class="prop-name">${prop.name} ${livePip}</div>
+          <div class="prop-meta"><span>📍 ${prop.suburb}</span><span>${prop.type}</span><span class="mono">${prop.price}</span></div>
+        </div>
+        <div class="prop-slot-count">${slots.length} slot${slots.length!==1?'s':''}</div>
+      </div>
+      <div class="slots-grid">${slots.map(buildSlot).join('')}</div>`;
+    return g;
+  }
+
+  function buildSlot(s) {
+    const dateObj = new Date(s.date + 'T' + s.start);
+    const day     = dateObj.getDate();
+    const month   = dateObj.toLocaleString('en',{month:'short'}).toUpperCase();
+    const dow     = dateObj.toLocaleString('en',{weekday:'short'});
+    const fill    = Math.round((s.booked / s.capacity) * 100);
+
+    const badge = {
+      live:      `<span class="status-badge sb-live">Live</span>`,
+      scheduled: `<span class="status-badge sb-scheduled">📅 Scheduled</span>`,
+      completed: `<span class="status-badge sb-completed">✔ Completed</span>`,
+      cancelled: `<span class="status-badge sb-cancelled">✕ Cancelled</span>`,
+    }[s.status];
+
+    // Attendee avatars for completed
+    let attHtml = '';
+    if (s.status === 'completed' && s.attendees.length) {
+      const show = s.attendees.slice(0,4);
+      const more = s.attendees.length - show.length;
+      attHtml = `<div class="slot-attended">${show.map(a=>`<div class="att-av" style="background:${avcol(a.name)}">${ini(a.name)}</div>`).join('')}${more>0?`<div class="att-more">+${more}</div>`:''}</div>`;
+    }
+
+    // Action buttons
+    let actions = '';
+    if (s.status === 'live') {
+      actions = `
+        <button class="btn bg bsm" onclick="goCheckin('${s.id}')">▶ Continue Check-In</button>
+        <button class="btn bo bsm" onclick="openResults('${s.id}')" title="View attendees">👥</button>`;
+    } else if (s.status === 'scheduled') {
+      actions = `
+        <button class="btn bp bsm" onclick="openStart('${s.id}')">▶ Start Inspection</button>
+        <button class="btn bo bsm" onclick="openResched('${s.id}')" title="Reschedule">📅</button>
+        <button class="btn bo bsm" onclick="openCancel('${s.id}')" title="Cancel" style="color:var(--red);border-color:#fecaca">✕</button>`;
+    } else if (s.status === 'completed') {
+      actions = `
+        <button class="btn bo bsm" onclick="openResults('${s.id}')">📋 View Results</button>`;
+    } else if (s.status === 'cancelled') {
+      actions = `
+        <button class="btn bo bsm" onclick="openResched('${s.id}')">↺ Reschedule</button>`;
+    }
+
+    return `
+      <div class="slot-card ${s.status}" id="slot-${s.id}">
+        <div class="slot-stripe"></div>
+        <div class="slot-main">
+          <div class="slot-date-block">
+            <div class="slot-day">${day}</div>
+            <div class="slot-month">${month}</div>
+            <div class="slot-dow">${dow}</div>
+          </div>
+          <div class="slot-divider"></div>
+          <div class="slot-info">
+            <div class="slot-time">${s.start} – ${s.end}</div>
+            <div class="slot-duration">30 min window${s.status==='completed'?` · ${s.checkedIn} checked in, ${s.noShow} no-show${s.walkins?`, ${s.walkins} walk-in`:''}`:''}</div>
+            ${s.status==='completed'?attHtml:''}
+          </div>
+          <div class="slot-bookings">
+            <div class="sb-val">${s.booked}</div>
+            <div class="sb-lbl">Booked${s.capacity?` / ${s.capacity}`:''}</div>
+            <div class="sb-bar-wrap"><div class="sb-bar" style="width:${fill}%"></div></div>
+          </div>
+          <div class="slot-status">${badge}</div>
+        </div>
+        <div class="slot-actions">${actions}</div>
+      </div>`;
+  }
+
+  function updateStats(filtered) {
+    document.getElementById('s-total').textContent  = filtered.length;
+    document.getElementById('s-live').textContent   = filtered.filter(i=>i.status==='live').length;
+    document.getElementById('s-sched').textContent  = filtered.filter(i=>i.status==='scheduled').length;
+    document.getElementById('s-done').textContent   = filtered.filter(i=>i.status==='completed').length;
+  }
+
+  // ── FILTER / SEARCH ──
+  function setFilter(f) {
+    activeFilter = f;
+    ['all','live','scheduled','completed','cancelled'].forEach(k => {
+      const el = document.getElementById('f-'+k);
+      if (el) el.classList.toggle('on', k === f);
+    });
+    render();
+  }
+
+  function applyFilters() { render(); }
+
+  function clearDateFilter() {
+    document.getElementById('date-from').value = '';
+    document.getElementById('date-to').value   = '';
+    render();
+  }
+
+  function clearAllFilters() {
+    document.getElementById('q-search').value    = '';
+    document.getElementById('prop-filter').value = '';
+    document.getElementById('date-from').value   = '';
+    document.getElementById('date-to').value     = '';
+    activeFilter = 'all';
+    ['all','live','scheduled','completed','cancelled'].forEach(k => {
+      const el = document.getElementById('f-'+k);
+      if (el) el.classList.toggle('on', k === 'all');
+    });
+    render();
+  }
+
+  // ── ADD INSPECTION ──
+  function openAddModal() {
+    document.getElementById('add-prop').value         = '';
+    document.getElementById('add-date').value         = '';
+    document.getElementById('add-start').value        = '';
+    document.getElementById('add-end').value          = '';
+    document.getElementById('add-capacity').value     = '8';
+    document.getElementById('add-notes').value        = '';
+    document.getElementById('add-prop-preview').style.display = 'none';
+    document.getElementById('add-error').style.display = 'none';
+    openM('addModal');
+  }
+
+  function confirmAdd() {
+    const pid      = document.getElementById('add-prop').value;
+    const date     = document.getElementById('add-date').value;
+    const start    = document.getElementById('add-start').value;
+    const end      = document.getElementById('add-end').value;
+    const capacity = parseInt(document.getElementById('add-capacity').value) || 8;
+    const errEl    = document.getElementById('add-error');
+
+    // Validation
+    if (!pid || !date || !start || !end) {
+      errEl.textContent = '⚠ Property, date, start time and end time are all required.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (start >= end) {
+      errEl.textContent = '⚠ End time must be after start time.';
+      errEl.style.display = 'block';
+      return;
+    }
+    // Check for duplicate slot on same property/date/time
+    const clash = inspections.find(i => i.propId === pid && i.date === date && i.start === start && i.status !== 'cancelled');
+    if (clash) {
+      errEl.textContent = '⚠ This property already has an inspection at that time on that date.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    const newInsp = {
+      id: 'i' + nextInspId++,
+      propId: pid,
+      date, start, end,
+      status: 'scheduled',
+      booked: 0, capacity,
+      checkedIn: 0, noShow: 0, walkins: 0,
+      attendees: [],
+      notes: document.getElementById('add-notes').value.trim(),
+    };
+    inspections.push(newInsp);
+    saveInspections();
+    closeM('addModal');
+    // Clear prop filter so the new slot is visible
+    document.getElementById('prop-filter').value = '';
+    activeFilter = 'all';
+    ['all','live','scheduled','completed','cancelled'].forEach(k => {
+      const el = document.getElementById('f-'+k);
+      if (el) el.classList.toggle('on', k === 'all');
+    });
+    render();
+    const p = properties.find(x => x.id === pid);
+    toast(`📅 Inspection added for ${p.name} on ${formatDate(date)} at ${start}`);
+  }
+
+  // ── NAVIGATION ──
+  function goCheckin(slotId) {
+    toast('▶ Opening Check-In for this inspection…');
+    setTimeout(() => { window.location.href = 'inspection.html'; }, 900);
+  }
+
+  // ── MODALS ──
+  function openStart(slotId) {
+    pendingSlotId = slotId;
+    const s = inspections.find(i => i.id === slotId);
+    const p = properties.find(x => x.id === s.propId);
+    document.getElementById('start-sub').textContent = `${p.name} · ${formatDate(s.date)} · ${s.start}–${s.end}`;
+    document.getElementById('start-details').innerHTML = `
+      <div class="modal-detail-row"><span>Property</span><span>${p.name}</span></div>
+      <div class="modal-detail-row"><span>Date</span><span>${formatDate(s.date)}</span></div>
+      <div class="modal-detail-row"><span>Time</span><span class="mono">${s.start} – ${s.end}</span></div>
+      <div class="modal-detail-row"><span>Booked</span><span>${s.booked} visitors</span></div>`;
+    openM('startModal');
+  }
+
+  function confirmStart() {
+    const s = inspections.find(i => i.id === pendingSlotId);
+    s.status = 'live';
+    saveInspections();
+    closeM('startModal');
+    render();
+    toast('🟢 Inspection started! Redirecting to Check-In…');
+    setTimeout(() => { window.location.href = 'inspection.html'; }, 1200);
+  }
+
+  function openResults(slotId) {
+    const s = inspections.find(i => i.id === slotId);
+    const p = properties.find(x => x.id === s.propId);
+    document.getElementById('results-title').textContent = s.status === 'live' ? '👥 Current Attendees' : '📋 Past Attendees';
+    document.getElementById('results-sub').textContent = `${p.name} · ${formatDate(s.date)} · ${s.start}–${s.end} · ${s.attendees.length} total`;
+    const list = document.getElementById('results-list');
+    if (!s.attendees.length) {
+      list.innerHTML = `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px">No attendees recorded yet.</div>`;
+    } else {
+      list.innerHTML = s.attendees.map(a => {
+        const badge = a.status==='CHECKED_IN'
+          ? (a.isWalkin ? '<span class="r-badge rb-wi">🚶 Walk-In</span>' : '<span class="r-badge rb-in">✔ Checked In</span>')
+          : '<span class="r-badge rb-ns">✕ No Show</span>';
+        return `<div class="result-row"><div class="r-av" style="background:${avcol(a.name)}">${ini(a.name)}</div><span class="r-name">${a.name}</span>${badge}</div>`;
+      }).join('');
+    }
+    openM('resultsModal');
+  }
+
+  function openCancel(slotId) {
+    pendingSlotId = slotId;
+    const s = inspections.find(i => i.id === slotId);
+    const p = properties.find(x => x.id === s.propId);
+    document.getElementById('cancel-sub').innerHTML = `Cancel <strong>${p.name}</strong> inspection on <strong>${formatDate(s.date)}</strong> at <strong>${s.start}</strong>?${s.booked>0?` <span style="color:var(--red);">${s.booked} booked visitor${s.booked!==1?'s':''} will be notified.</span>`:''}`;
+    openM('cancelModal');
+  }
+
+  function confirmCancel() {
+    const s = inspections.find(i => i.id === pendingSlotId);
+    s.status = 'cancelled';
+    saveInspections();
+    closeM('cancelModal');
+    render();
+    toast('✕ Inspection slot cancelled. Visitors notified.');
+  }
+
+  function openResched(slotId) {
+    pendingSlotId = slotId;
+    const s = inspections.find(i => i.id === slotId);
+    const p = properties.find(x => x.id === s.propId);
+    document.getElementById('resched-sub').textContent = `Rescheduling: ${p.name} · currently ${formatDate(s.date)} ${s.start}–${s.end}`;
+    document.getElementById('resched-date').value  = s.date;
+    document.getElementById('resched-start').value = s.start;
+    document.getElementById('resched-end').value   = s.end;
+    openM('reschedModal');
+  }
+
+  function confirmResched() {
+    const s    = inspections.find(i => i.id === pendingSlotId);
+    const date = document.getElementById('resched-date').value;
+    const st   = document.getElementById('resched-start').value;
+    const en   = document.getElementById('resched-end').value;
+    if (!date || !st || !en) { toast('⚠ Please fill in all fields'); return; }
+    s.date   = date;
+    s.start  = st;
+    s.end    = en;
+    if (s.status === 'cancelled') s.status = 'scheduled';
+    saveInspections();
+    closeM('reschedModal');
+    render();
+    toast('📅 Inspection rescheduled! Visitors will be notified.');
+  }
+
+  function openM(id)  { document.getElementById(id).classList.add('open'); activeModal = id; }
+  function closeM(id) { document.getElementById(id).classList.remove('open'); activeModal = null; }
+  document.querySelectorAll('.mov').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && activeModal) closeM(activeModal); });
+
+  // ── HELPERS ──
+  function formatDate(d) {
+    return new Date(d+'T12:00').toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('tmsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // ── INIT ──
+  loadInspections();
+  populatePropDropdowns();
+  render();
+</script>
+</body>
+</html>
