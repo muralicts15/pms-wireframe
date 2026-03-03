@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PropertyPortal — Find Your Next Home</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f0f2f5;
+        --white: #ffffff;
+        --card: #ffffff;
+        --border: #e4e8ef;
+        --text-primary: #131b2e;
+        --text-secondary: #5a6478;
+        --text-muted: #9aa1b1;
+        --accent: #3b7bff;
+        --accent-light: #edf2ff;
+        --accent-hover: #2563eb;
+        --green: #22c55e;
+        --green-light: #f0fdf4;
+        --green-dark: #16a34a;
+        --amber: #f59e0b;
+        --amber-light: #fffbeb;
+        --red: #ef4444;
+        --red-light: #fef2f2;
+        --purple: #8b5cf6;
+        --purple-light: #f5f3ff;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06),
+          0 1px 2px rgba(0, 0, 0, 0.04);
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.14);
+        --radius: 12px;
+        --radius-sm: 8px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        min-height: 100vh;
+      }
+
+      /* ─── HEADER ─── */
+      .header {
+        background: #0f1623;
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .header-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 24px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .logo-mark {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        flex-shrink: 0;
+      }
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--accent);
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .logo-text {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.2px;
+      }
+      .logo-sub {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .header-search {
+        flex: 1;
+        max-width: 480px;
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 0 14px;
+        gap: 10px;
+        transition: all 0.2s;
+      }
+      .header-search:focus-within {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 123, 255, 0.2);
+      }
+      .header-search svg {
+        flex-shrink: 0;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .header-search input {
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        color: #fff;
+        padding: 10px 0;
+      }
+      .header-search input::placeholder {
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      .header-nav {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.15s;
+        cursor: pointer;
+      }
+      .nav-link:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        border-radius: 8px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.15s;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .btn:hover {
+        opacity: 0.9;
+      }
+      .btn-outline-white {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .btn-outline-white:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--accent-hover);
+      }
+      .btn-green {
+        background: var(--green);
+        color: #fff;
+      }
+      .btn-green:hover {
+        background: var(--green-dark);
+      }
+      .btn-sm {
+        padding: 7px 14px;
+        font-size: 12px;
+      }
+      .btn-outline {
+        background: #fff;
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+      }
+
+      /* ─── HERO SEARCH BAR ─── */
+      .hero-bar {
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 14px 24px;
+      }
+      .hero-bar-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .filter-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .filter-pill:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .filter-pill.active {
+        border-color: var(--accent);
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+      .filter-pill select {
+        border: none;
+        outline: none;
+        background: none;
+        font-size: 13px;
+        font-weight: 500;
+        color: inherit;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        padding: 0;
+      }
+      .filter-divider {
+        width: 1px;
+        height: 28px;
+        background: var(--border);
+      }
+
+      .search-btn {
+        padding: 9px 20px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto;
+      }
+      .search-btn:hover {
+        background: var(--accent-hover);
+      }
+
+      /* ─── MAIN LAYOUT ─── */
+      .main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px 24px 60px;
+        display: flex;
+        gap: 20px;
+      }
+
+      /* ─── SIDEBAR ─── */
+      .sidebar {
+        width: 280px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .filter-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: var(--shadow-sm);
+      }
+      .filter-card-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .filter-card-title svg {
+        color: var(--accent);
+      }
+
+      .filter-field {
+        margin-bottom: 14px;
+      }
+      .filter-field:last-child {
+        margin-bottom: 0;
+      }
+      .filter-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .filter-input {
+        width: 100%;
+        padding: 8px 11px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text-primary);
+        background: var(--white);
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+      .filter-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 123, 255, 0.1);
+      }
+      select.filter-input {
+        cursor: pointer;
+      }
+
+      .range-row {
+        display: flex;
+        gap: 8px;
+      }
+      .range-row .filter-input {
+        flex: 1;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+        margin-top: 8px;
+        cursor: pointer;
+      }
+      .range-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 4px;
+        font-family: "DM Mono", monospace;
+      }
+
+      .bed-btn-group {
+        display: flex;
+        gap: 6px;
+      }
+      .bed-btn {
+        flex: 1;
+        padding: 7px 4px;
+        text-align: center;
+        border: 1.5px solid var(--border);
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.15s;
+        background: #fff;
+      }
+      .bed-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .bed-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.15s;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+      .checkbox-row:hover {
+        background: var(--bg);
+      }
+      .checkbox-row input {
+        accent-color: var(--accent);
+        width: 14px;
+        height: 14px;
+        cursor: pointer;
+      }
+
+      .apply-btn {
+        width: 100%;
+        padding: 11px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 700;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: all 0.15s;
+        margin-top: 4px;
+      }
+      .apply-btn:hover {
+        background: var(--accent-hover);
+      }
+
+      /* ─── RESULTS AREA ─── */
+      .results {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .results-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .results-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .results-count {
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-muted);
+        margin-left: 8px;
+      }
+
+      .results-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sort-select {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text-primary);
+        background: #fff;
+        outline: none;
+        cursor: pointer;
+      }
+
+      /* View toggle */
+      .view-toggle {
+        display: flex;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .view-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--text-muted);
+        transition: all 0.15s;
+        border: none;
+        background: none;
+        font-size: 14px;
+      }
+      .view-btn:hover {
+        color: var(--accent);
+        background: var(--accent-light);
+      }
+      .view-btn.active {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      /* ─── GRID VIEW ─── */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 16px;
+      }
+
+      /* ─── LIST VIEW ─── */
+      .cards-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .cards-list .prop-card {
+        flex-direction: row;
+      }
+      .cards-list .prop-card .card-img {
+        width: 220px;
+        flex-shrink: 0;
+        height: auto;
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+      .cards-list .prop-card .card-img img {
+        height: 100%;
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+
+      /* ─── MAP VIEW ─── */
+      .map-view {
+        display: none;
+      }
+      .map-view.active {
+        display: flex;
+        gap: 16px;
+      }
+      .map-placeholder {
+        flex: 1;
+        background: #e8ecf3;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        min-height: 560px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .map-placeholder-icon {
+        font-size: 48px;
+      }
+      .map-side-list {
+        width: 300px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-y: auto;
+        max-height: 560px;
+      }
+      .map-mini-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        gap: 0;
+      }
+      .map-mini-card:hover {
+        border-color: var(--accent);
+        box-shadow: var(--shadow);
+      }
+      .map-mini-card.active {
+        border-color: var(--accent);
+        background: var(--accent-light);
+      }
+      .map-mini-img {
+        width: 80px;
+        flex-shrink: 0;
+      }
+      .map-mini-img img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        display: block;
+      }
+      .map-mini-body {
+        padding: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+      .map-mini-price {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--green-dark);
+        font-family: "DM Mono", monospace;
+      }
+      .map-mini-addr {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .map-mini-specs {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      /* ─── PROPERTY CARD ─── */
+      .prop-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+      .prop-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+        border-color: #d0d8e8;
+      }
+
+      .card-img {
+        position: relative;
+        height: 190px;
+        overflow: hidden;
+      }
+      .card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s;
+      }
+      .prop-card:hover .card-img img {
+        transform: scale(1.04);
+      }
+
+      .card-badges {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .card-badge {
+        padding: 3px 9px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        backdrop-filter: blur(6px);
+        white-space: nowrap;
+      }
+      .badge-type {
+        background: rgba(15, 22, 35, 0.7);
+        color: #fff;
+      }
+      .badge-demand {
+        background: rgba(239, 68, 68, 0.9);
+        color: #fff;
+      }
+      .badge-pets {
+        background: rgba(34, 197, 94, 0.9);
+        color: #fff;
+      }
+      .badge-new {
+        background: rgba(59, 123, 255, 0.9);
+        color: #fff;
+      }
+
+      .card-save {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        font-size: 15px;
+      }
+      .card-save:hover {
+        background: #fff;
+        transform: scale(1.1);
+      }
+      .card-save.saved {
+        color: var(--red);
+      }
+
+      .card-body {
+        padding: 16px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--green-dark);
+        font-family: "DM Mono", monospace;
+      }
+      .card-price span {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-muted);
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .card-address {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 4px;
+        line-height: 1.3;
+      }
+      .card-suburb {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      .card-specs {
+        display: flex;
+        gap: 12px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border);
+      }
+      .card-spec {
+        font-size: 12px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .card-inspection {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent-light);
+        border: 1px solid #c7d9ff;
+        border-radius: 6px;
+        padding: 7px 10px;
+        margin-top: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .card-inspection svg {
+        flex-shrink: 0;
+      }
+
+      .card-agent {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border);
+      }
+      .agent-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .agent-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .agent-agency {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .card-btn {
+        flex: 1;
+        padding: 9px 10px;
+        border-radius: 7px;
+        border: none;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.15s;
+      }
+      .card-btn-inspect {
+        background: var(--accent-light);
+        color: var(--accent);
+        border: 1.5px solid #c7d9ff;
+      }
+      .card-btn-inspect:hover {
+        background: #dbeaff;
+        border-color: var(--accent);
+      }
+      .card-btn-apply {
+        background: var(--green);
+        color: #fff;
+      }
+      .card-btn-apply:hover {
+        background: var(--green-dark);
+      }
+
+      /* ─── AVAILABLE FROM tag ─── */
+      .available-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 6px;
+      }
+
+      /* ─── PAGINATION ─── */
+      .pagination-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+      }
+      .pagination-info {
+        font-size: 13px;
+        color: var(--text-muted);
+        font-family: "DM Mono", monospace;
+      }
+      .pagination {
+        display: flex;
+        gap: 4px;
+      }
+      .page-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.15s;
+        font-family: "DM Mono", monospace;
+      }
+      .page-btn:hover:not(.active) {
+        background: var(--bg);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .page-btn.active {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+      .page-btn.dots {
+        cursor: default;
+        border-color: transparent;
+        background: none;
+      }
+
+      .load-more-wrap {
+        text-align: center;
+        margin-top: 24px;
+      }
+      .load-more-btn {
+        padding: 12px 32px;
+        background: #fff;
+        color: var(--text-primary);
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.15s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .load-more-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--accent-light);
+      }
+
+      /* ─── MODAL ─── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 300;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .modal-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 16px;
+        padding: 28px;
+        max-width: 480px;
+        width: 100%;
+        margin: 20px;
+        box-shadow: var(--shadow-lg);
+        transform: translateY(12px);
+        transition: transform 0.2s;
+      }
+      .modal-overlay.open .modal {
+        transform: translateY(0);
+      }
+      .modal-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .modal-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+      }
+
+      .time-slot {
+        width: 100%;
+        padding: 12px 14px;
+        text-align: left;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        color: var(--text-primary);
+        transition: all 0.15s;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .time-slot:hover {
+        border-color: var(--accent);
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+      .time-slot.selected {
+        border-color: var(--accent);
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+      .time-slot-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        flex-shrink: 0;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .modal-cancel {
+        flex: 1;
+        padding: 11px;
+        background: var(--bg);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: background 0.15s;
+      }
+      .modal-cancel:hover {
+        background: #e2e6ee;
+      }
+      .modal-confirm {
+        flex: 1;
+        padding: 11px;
+        background: var(--green);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: background 0.15s;
+      }
+      .modal-confirm:hover {
+        background: var(--green-dark);
+      }
+
+      /* Auth modal */
+      .auth-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 20px;
+      }
+      .auth-tab {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s;
+        margin-bottom: -1px;
+      }
+      .auth-tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+      .auth-field {
+        margin-bottom: 12px;
+      }
+      .auth-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 5px;
+        display: block;
+      }
+      .auth-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .auth-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 123, 255, 0.1);
+      }
+      .auth-divider {
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin: 14px 0;
+        position: relative;
+      }
+      .auth-divider::before,
+      .auth-divider::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 42%;
+        height: 1px;
+        background: var(--border);
+      }
+      .auth-divider::before {
+        left: 0;
+      }
+      .auth-divider::after {
+        right: 0;
+      }
+
+      /* ─── TOAST ─── */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #1e293b;
+        color: #fff;
+        padding: 14px 18px;
+        border-radius: 10px;
+        box-shadow: var(--shadow-lg);
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 400;
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        max-width: 340px;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .toast-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      /* ─── SUBURB AUTOCOMPLETE ─── */
+      .suburb-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        cursor: pointer;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.12s;
+      }
+      .suburb-option:last-child {
+        border-bottom: none;
+      }
+      .suburb-option:hover {
+        background: var(--accent-light);
+      }
+      .suburb-option-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: block;
+      }
+      .suburb-option-post {
+        font-size: 11px;
+        color: var(--text-muted);
+        font-family: "DM Mono", monospace;
+      }
+
+      /* ─── NO RESULTS ─── */
+      .no-results {
+        text-align: center;
+        padding: 60px 20px;
+        display: none;
+      }
+      .no-results.show {
+        display: block;
+      }
+      .no-results-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══ HEADER ═══ -->
+    <header class="header">
+      <div class="header-inner">
+        <a class="logo-mark" href="#">
+          <div class="logo-icon">🏠</div>
+          <div>
+            <div class="logo-text">PropertyPortal</div>
+            <div class="logo-sub">Rental Listings WA</div>
+          </div>
+        </a>
+
+        <div class="header-search">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            id="globalSearch"
+            placeholder="Search suburb, postcode or street…"
+          />
+        </div>
+
+        <nav class="header-nav">
+          <a class="nav-link" href="#">Browse</a>
+          <a class="nav-link" href="#">How It Works</a>
+          <div
+            style="
+              width: 1px;
+              height: 20px;
+              background: rgba(255, 255, 255, 0.1);
+            "
+          ></div>
+          <button
+            class="btn btn-outline-white btn-sm"
+            onclick="openAuthModal('login')"
+          >
+            Log In
+          </button>
+          <button
+            class="btn btn-primary btn-sm"
+            onclick="openAuthModal('register')"
+          >
+            Register
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ═══ HERO FILTER BAR ═══ -->
+    <div class="hero-bar">
+      <div class="hero-bar-inner">
+        <div class="suburb-pill-wrap" style="position: relative">
+          <div
+            class="filter-pill"
+            style="gap: 7px; padding: 0 14px; min-width: 200px"
+          >
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              style="flex-shrink: 0; color: var(--text-muted)"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <input
+              id="suburbInput"
+              type="text"
+              placeholder="Suburb or postcode…"
+              autocomplete="off"
+              style="
+                border: none;
+                outline: none;
+                background: none;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text-secondary);
+                font-family: 'DM Sans', sans-serif;
+                width: 160px;
+                padding: 9px 0;
+              "
+              oninput="filterSuburbs(this.value)"
+              onfocus="showSuburbDropdown()"
+              onblur="hideSuburbDropdown()"
+            />
+          </div>
+          <div
+            id="suburbDropdown"
+            style="
+              display: none;
+              position: absolute;
+              top: calc(100% + 6px);
+              left: 0;
+              min-width: 240px;
+              background: #fff;
+              border: 1px solid var(--border);
+              border-radius: 10px;
+              box-shadow: var(--shadow);
+              z-index: 50;
+              overflow: hidden;
+            "
+          ></div>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-pill">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          </svg>
+          <select
+            style="
+              border: none;
+              outline: none;
+              background: none;
+              font-size: 13px;
+              font-weight: 500;
+              color: var(--text-secondary);
+              font-family: 'DM Sans', sans-serif;
+              cursor: pointer;
+            "
+          >
+            <option>Any Type</option>
+            <option>Apartment / Unit</option>
+            <option>House</option>
+            <option>Townhouse</option>
+            <option>Studio</option>
+            <option>Villa</option>
+          </select>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-pill" id="bedPill" onclick="cycleBeds(this)">
+          🛏 Any Beds
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-pill">
+          💰
+          <select
+            style="
+              border: none;
+              outline: none;
+              background: none;
+              font-size: 13px;
+              font-weight: 500;
+              color: var(--text-secondary);
+              font-family: 'DM Sans', sans-serif;
+              cursor: pointer;
+            "
+          >
+            <option>Any Price</option>
+            <option>Up to $400/wk</option>
+            <option>Up to $600/wk</option>
+            <option>Up to $800/wk</option>
+            <option>Up to $1,000/wk</option>
+            <option>$1,000+/wk</option>
+          </select>
+        </div>
+
+        <div
+          class="filter-pill"
+          id="petPill"
+          onclick="togglePill(this, 'Pets OK', 'Pets OK')"
+        >
+          🐾 Pets OK
+        </div>
+
+        <div
+          class="filter-pill"
+          id="furnPill"
+          onclick="togglePill(this, 'Furnished', 'Furnished')"
+        >
+          🛋 Furnished
+        </div>
+
+        <button class="search-btn" onclick="runSearch()">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          Search
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="main">
+      <!-- SIDEBAR FILTERS -->
+      <aside class="sidebar">
+        <div class="filter-card">
+          <div class="filter-card-title">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+            Refine Search
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Suburb / Postcode</span>
+            <input
+              class="filter-input"
+              type="text"
+              placeholder="e.g. Perth 6000"
+            />
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Available From</span>
+            <input class="filter-input" type="date" />
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Weekly Rent</span>
+            <div class="range-row">
+              <input
+                class="filter-input"
+                type="number"
+                placeholder="Min $"
+                min="0"
+              />
+              <input
+                class="filter-input"
+                type="number"
+                placeholder="Max $"
+                min="0"
+              />
+            </div>
+            <input
+              type="range"
+              min="200"
+              max="2000"
+              value="1000"
+              id="rentRange"
+              oninput="updateRangeLabel(this.value)"
+            />
+            <div class="range-labels">
+              <span>$200</span><span id="rangeVal">$1,000</span
+              ><span>$2,000+</span>
+            </div>
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Bedrooms</span>
+            <div class="bed-btn-group">
+              <div class="bed-btn active" onclick="selectBed(this)">Any</div>
+              <div class="bed-btn" onclick="selectBed(this)">1+</div>
+              <div class="bed-btn" onclick="selectBed(this)">2+</div>
+              <div class="bed-btn" onclick="selectBed(this)">3+</div>
+              <div class="bed-btn" onclick="selectBed(this)">4+</div>
+            </div>
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Bathrooms</span>
+            <div class="bed-btn-group">
+              <div class="bed-btn active" onclick="selectBed(this)">Any</div>
+              <div class="bed-btn" onclick="selectBed(this)">1+</div>
+              <div class="bed-btn" onclick="selectBed(this)">2+</div>
+              <div class="bed-btn" onclick="selectBed(this)">3+</div>
+            </div>
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Property Type</span>
+            <select class="filter-input">
+              <option>Any Type</option>
+              <option>Apartment / Unit</option>
+              <option>House</option>
+              <option>Townhouse / Villa</option>
+              <option>Studio</option>
+            </select>
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Parking</span>
+            <select class="filter-input">
+              <option>Any</option>
+              <option>1+ Space</option>
+              <option>2+ Spaces</option>
+              <option>Garage</option>
+            </select>
+          </div>
+
+          <div class="filter-field">
+            <span class="filter-label">Options</span>
+            <label class="checkbox-row"
+              ><input type="checkbox" /> Pets Allowed</label
+            >
+            <label class="checkbox-row"
+              ><input type="checkbox" checked /> Inspections This Week</label
+            >
+            <label class="checkbox-row"
+              ><input type="checkbox" /> Furnished</label
+            >
+            <label class="checkbox-row"
+              ><input type="checkbox" /> Include Bills</label
+            >
+          </div>
+
+          <button class="apply-btn" onclick="runSearch()">Apply Filters</button>
+        </div>
+
+        <!-- Active filters summary -->
+        <div class="filter-card" style="padding: 14px 16px">
+          <div
+            style="
+              font-size: 11px;
+              font-weight: 700;
+              color: var(--text-muted);
+              text-transform: uppercase;
+              letter-spacing: 0.6px;
+              margin-bottom: 10px;
+            "
+          >
+            Active Filters
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px">
+            <span
+              style="
+                background: var(--accent-light);
+                color: var(--accent);
+                font-size: 11px;
+                font-weight: 700;
+                padding: 3px 10px;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
+              >Perth CBD
+              <span
+                onclick="this.parentElement.remove()"
+                style="cursor: pointer; opacity: 0.6"
+                >✕</span
+              ></span
+            >
+            <span
+              style="
+                background: var(--accent-light);
+                color: var(--accent);
+                font-size: 11px;
+                font-weight: 700;
+                padding: 3px 10px;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
+              >2+ Beds
+              <span
+                onclick="this.parentElement.remove()"
+                style="cursor: pointer; opacity: 0.6"
+                >✕</span
+              ></span
+            >
+            <span
+              style="
+                background: var(--accent-light);
+                color: var(--accent);
+                font-size: 11px;
+                font-weight: 700;
+                padding: 3px 10px;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+              "
+              >Max $800
+              <span
+                onclick="this.parentElement.remove()"
+                style="cursor: pointer; opacity: 0.6"
+                >✕</span
+              ></span
+            >
+          </div>
+          <button
+            onclick="clearAllFilters()"
+            style="
+              margin-top: 10px;
+              font-size: 12px;
+              color: var(--red);
+              font-weight: 600;
+              background: none;
+              border: none;
+              cursor: pointer;
+              font-family: 'DM Sans', sans-serif;
+            "
+          >
+            Clear all filters
+          </button>
+        </div>
+      </aside>
+
+      <!-- RESULTS -->
+      <section class="results">
+        <!-- Results header -->
+        <div class="results-header">
+          <div>
+            <span class="results-title">Available Rentals</span>
+            <span class="results-count" id="resultsCount"
+              >Showing 9 of 48 properties</span
+            >
+          </div>
+          <div class="results-controls">
+            <select class="sort-select">
+              <option>Newest First</option>
+              <option>Lowest Rent</option>
+              <option>Highest Rent</option>
+              <option>Most Bedrooms</option>
+              <option>Inspection Soon</option>
+            </select>
+            <div class="view-toggle">
+              <button
+                class="view-btn active"
+                id="gridBtn"
+                onclick="setView('grid')"
+                title="Grid view"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                </svg>
+              </button>
+              <button
+                class="view-btn"
+                id="listBtn"
+                onclick="setView('list')"
+                title="List view"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <line x1="8" y1="6" x2="21" y2="6" />
+                  <line x1="8" y1="12" x2="21" y2="12" />
+                  <line x1="8" y1="18" x2="21" y2="18" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" />
+                  <line x1="3" y1="12" x2="3.01" y2="12" />
+                  <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+              </button>
+              <button
+                class="view-btn"
+                id="mapBtn"
+                onclick="setView('map')"
+                title="Map view"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <polygon
+                    points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"
+                  />
+                  <line x1="8" y1="2" x2="8" y2="18" />
+                  <line x1="16" y1="6" x2="16" y2="22" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid / List view -->
+        <div id="cardContainer" class="cards-grid"></div>
+
+        <!-- Map view -->
+        <div id="mapView" class="map-view">
+          <div class="map-placeholder">
+            <div class="map-placeholder-icon">🗺️</div>
+            <div style="font-weight: 600; color: var(--text-secondary)">
+              Interactive Map
+            </div>
+            <div style="font-size: 12px">
+              Property pins would appear here with a maps API integration
+            </div>
+          </div>
+          <div class="map-side-list" id="mapSideList"></div>
+        </div>
+
+        <!-- No results -->
+        <div class="no-results" id="noResults">
+          <div class="no-results-icon">🏠</div>
+          <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px">
+            No properties found
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted)">
+            Try adjusting your filters or search a different suburb.
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-wrap" id="paginationWrap">
+          <div class="pagination-info">Showing 1–9 of 48 results</div>
+          <div class="pagination">
+            <div class="page-btn active">1</div>
+            <div class="page-btn" onclick="changePage(this)">2</div>
+            <div class="page-btn" onclick="changePage(this)">3</div>
+            <div class="page-btn" onclick="changePage(this)">4</div>
+            <div class="page-btn" onclick="changePage(this)">5</div>
+            <div class="page-btn dots">…</div>
+            <div class="page-btn" onclick="changePage(this)">12</div>
+            <div class="page-btn" onclick="nextPage(this)">›</div>
+          </div>
+        </div>
+
+        <!-- Load more -->
+        <div class="load-more-wrap">
+          <button class="load-more-btn" onclick="loadMore()">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+            Load More Properties
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ═══ INSPECT MODAL ═══ -->
+    <div class="modal-overlay" id="inspectModal">
+      <div class="modal">
+        <div class="modal-title">📅 Book Inspection</div>
+        <div class="modal-sub" id="inspectAddr">
+          12 Example Street, Perth WA 6000
+        </div>
+        <div id="timeSlots">
+          <button class="time-slot" onclick="selectSlot(this)">
+            <div class="time-slot-dot"></div>
+            Sat 14 Mar · 10:00 AM – 10:30 AM
+          </button>
+          <button class="time-slot" onclick="selectSlot(this)">
+            <div class="time-slot-dot"></div>
+            Sat 14 Mar · 11:00 AM – 11:30 AM
+          </button>
+          <button class="time-slot" onclick="selectSlot(this)">
+            <div class="time-slot-dot"></div>
+            Sun 15 Mar · 1:00 PM – 1:30 PM
+          </button>
+          <button class="time-slot" onclick="selectSlot(this)">
+            <div class="time-slot-dot"></div>
+            Sun 15 Mar · 2:30 PM – 3:00 PM
+          </button>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-cancel" onclick="closeModal('inspectModal')">
+            Cancel
+          </button>
+          <button class="modal-confirm" onclick="confirmBooking()">
+            Confirm Booking
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ AUTH MODAL ═══ -->
+    <div class="modal-overlay" id="authModal">
+      <div class="modal">
+        <div class="auth-tabs">
+          <div
+            class="auth-tab active"
+            id="loginTab"
+            onclick="switchTab('login')"
+          >
+            Log In
+          </div>
+          <div
+            class="auth-tab"
+            id="registerTab"
+            onclick="switchTab('register')"
+          >
+            Register
+          </div>
+        </div>
+        <div id="loginForm">
+          <div class="auth-field">
+            <label class="auth-label">Email Address</label
+            ><input
+              class="auth-input"
+              type="email"
+              placeholder="you@example.com"
+            />
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Password</label
+            ><input class="auth-input" type="password" placeholder="••••••••" />
+          </div>
+          <button
+            class="apply-btn"
+            onclick="closeModal('authModal'); showToast('✅ Logged in successfully!')"
+          >
+            Log In
+          </button>
+          <div class="auth-divider">or continue with</div>
+          <button
+            class="btn btn-outline"
+            style="width: 100%; justify-content: center; padding: 10px"
+            onclick="closeModal('authModal'); showToast('✅ Signed in with Google!')"
+          >
+            🔵 Continue with Google
+          </button>
+        </div>
+        <div id="registerForm" style="display: none">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+            <div class="auth-field">
+              <label class="auth-label">First Name</label
+              ><input class="auth-input" type="text" placeholder="John" />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Last Name</label
+              ><input class="auth-input" type="text" placeholder="Smith" />
+            </div>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Email Address</label
+            ><input
+              class="auth-input"
+              type="email"
+              placeholder="you@example.com"
+            />
+          </div>
+          <div class="auth-field">
+            <label class="auth-label">Password</label
+            ><input
+              class="auth-input"
+              type="password"
+              placeholder="Create a password"
+            />
+          </div>
+          <button
+            class="apply-btn"
+            onclick="closeModal('authModal'); showToast('✅ Account created! Welcome to PropertyPortal!')"
+          >
+            Create Account
+          </button>
+          <div class="auth-divider">or</div>
+          <button
+            class="btn btn-outline"
+            style="width: 100%; justify-content: center; padding: 10px"
+            onclick="closeModal('authModal'); showToast('✅ Signed up with Google!')"
+          >
+            🔵 Continue with Google
+          </button>
+        </div>
+        <button
+          onclick="closeModal('authModal')"
+          style="
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text-muted);
+          "
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+      <div class="toast-icon" id="toastIcon">✅</div>
+      <span id="toastMsg">Done!</span>
+    </div>
+
+    <script>
+      // ─── PROPERTY DATA ───
+      const PROPERTIES = [
+        {
+          id: 1,
+          price: "$620",
+          addr: "12 Example Street",
+          suburb: "Perth WA 6000",
+          type: "Apartment",
+          beds: 2,
+          baths: 2,
+          parking: 1,
+          available: "5 Jul 2026",
+          inspection: "Sat 14 Mar · 10:00 AM",
+          pets: false,
+          demand: true,
+          isNew: false,
+          agent: {
+            name: "Murali Prakash",
+            agency: "Smart Property Group",
+            initials: "MP",
+            color: "linear-gradient(135deg,#3b7bff,#6c3bff)",
+          },
+          img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+        },
+        {
+          id: 2,
+          price: "$750",
+          addr: "45 Riverside Drive",
+          suburb: "South Perth WA 6151",
+          type: "Townhouse",
+          beds: 3,
+          baths: 2,
+          parking: 2,
+          available: "Now",
+          inspection: "Sat 14 Mar · 11:30 AM",
+          pets: true,
+          demand: false,
+          isNew: true,
+          agent: {
+            name: "Jessica Wong",
+            agency: "Smart Property Group",
+            initials: "JW",
+            color: "linear-gradient(135deg,#22c55e,#16a34a)",
+          },
+          img: "https://images.unsplash.com/photo-1583608205776-b9285c3b8b6f?w=800",
+        },
+        {
+          id: 3,
+          price: "$950",
+          addr: "8 Sunset Boulevard",
+          suburb: "Fremantle WA 6160",
+          type: "House",
+          beds: 4,
+          baths: 2,
+          parking: 2,
+          available: "15 Mar 2026",
+          inspection: "Sun 15 Mar · 2:00 PM",
+          pets: true,
+          demand: true,
+          isNew: false,
+          agent: {
+            name: "Ryan Lee",
+            agency: "Smart Property Group",
+            initials: "RL",
+            color: "linear-gradient(135deg,#f59e0b,#d97706)",
+          },
+          img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800",
+        },
+        {
+          id: 4,
+          price: "$480",
+          addr: "22 Murray Street",
+          suburb: "Perth WA 6000",
+          type: "Studio",
+          beds: 1,
+          baths: 1,
+          parking: 0,
+          available: "1 Apr 2026",
+          inspection: "Sat 14 Mar · 9:00 AM",
+          pets: false,
+          demand: false,
+          isNew: true,
+          agent: {
+            name: "Sarah Kim",
+            agency: "Smart Property Group",
+            initials: "SK",
+            color: "linear-gradient(135deg,#8b5cf6,#6c3bff)",
+          },
+          img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800",
+        },
+        {
+          id: 5,
+          price: "$820",
+          addr: "3 Ocean View Terrace",
+          suburb: "Cottesloe WA 6011",
+          type: "Apartment",
+          beds: 2,
+          baths: 2,
+          parking: 1,
+          available: "20 Mar 2026",
+          inspection: "Sun 15 Mar · 10:30 AM",
+          pets: false,
+          demand: true,
+          isNew: false,
+          agent: {
+            name: "Murali Prakash",
+            agency: "Smart Property Group",
+            initials: "MP",
+            color: "linear-gradient(135deg,#3b7bff,#6c3bff)",
+          },
+          img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800",
+        },
+        {
+          id: 6,
+          price: "$650",
+          addr: "17 Beaufort Street",
+          suburb: "Highgate WA 6003",
+          type: "Unit",
+          beds: 2,
+          baths: 1,
+          parking: 1,
+          available: "Now",
+          inspection: "Sat 14 Mar · 1:00 PM",
+          pets: true,
+          demand: false,
+          isNew: false,
+          agent: {
+            name: "Jessica Wong",
+            agency: "Smart Property Group",
+            initials: "JW",
+            color: "linear-gradient(135deg,#22c55e,#16a34a)",
+          },
+          img: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800",
+        },
+        {
+          id: 7,
+          price: "$1,100",
+          addr: "90 Kings Park Road",
+          suburb: "West Perth WA 6005",
+          type: "Apartment",
+          beds: 3,
+          baths: 2,
+          parking: 2,
+          available: "1 May 2026",
+          inspection: "Sat 14 Mar · 3:00 PM",
+          pets: false,
+          demand: true,
+          isNew: true,
+          agent: {
+            name: "Sarah Kim",
+            agency: "Smart Property Group",
+            initials: "SK",
+            color: "linear-gradient(135deg,#8b5cf6,#6c3bff)",
+          },
+          img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800",
+        },
+        {
+          id: 8,
+          price: "$580",
+          addr: "6 Leederville Parade",
+          suburb: "Leederville WA 6007",
+          type: "Villa",
+          beds: 2,
+          baths: 1,
+          parking: 1,
+          available: "Now",
+          inspection: "Sun 15 Mar · 11:00 AM",
+          pets: true,
+          demand: false,
+          isNew: false,
+          agent: {
+            name: "Ryan Lee",
+            agency: "Smart Property Group",
+            initials: "RL",
+            color: "linear-gradient(135deg,#f59e0b,#d97706)",
+          },
+          img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
+        },
+        {
+          id: 9,
+          price: "$890",
+          addr: "55 Stirling Highway",
+          suburb: "Nedlands WA 6009",
+          type: "House",
+          beds: 4,
+          baths: 3,
+          parking: 2,
+          available: "10 Apr 2026",
+          inspection: "Sat 14 Mar · 4:00 PM",
+          pets: true,
+          demand: true,
+          isNew: true,
+          agent: {
+            name: "Murali Prakash",
+            agency: "Smart Property Group",
+            initials: "MP",
+            color: "linear-gradient(135deg,#3b7bff,#6c3bff)",
+          },
+          img: "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?w=800",
+        },
+      ];
+
+      let currentView = "grid";
+      let savedProps = new Set();
+
+      // ─── RENDER CARDS ───
+      function renderCards() {
+        const container = document.getElementById("cardContainer");
+        container.innerHTML = "";
+
+        PROPERTIES.forEach((p) => {
+          const card = document.createElement("div");
+          card.className = "prop-card";
+          card.innerHTML = `
+        <div class="card-img">
+          <img src="${p.img}" alt="${
+            p.addr
+          }" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800'" />
+          <div class="card-badges">
+            <span class="card-badge badge-type">${p.type}</span>
+            ${
+              p.pets
+                ? '<span class="card-badge badge-pets">🐾 Pets OK</span>'
+                : ""
+            }
+          </div>
+          <button class="card-save ${
+            savedProps.has(p.id) ? "saved" : ""
+          }" onclick="toggleSave(event, ${p.id})" title="Save property">
+            ${savedProps.has(p.id) ? "❤️" : "🤍"}
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="card-price">${p.price}<span> / week</span></div>
+          <div class="card-address">${p.addr}</div>
+          <div class="card-suburb">📍 ${p.suburb}</div>
+          <div class="available-tag">🗓 Available: ${p.available}</div>
+          <div class="card-specs">
+            <span class="card-spec">🛏 ${p.beds} Bed</span>
+            <span class="card-spec">🛁 ${p.baths} Bath</span>
+            <span class="card-spec">${
+              p.parking > 0 ? "🚗 " + p.parking + " Park" : "🚶 No Parking"
+            }</span>
+          </div>
+          <div class="card-inspection">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Next inspection: ${p.inspection}
+          </div>
+          <div class="card-agent">
+            <div class="agent-avatar" style="background:${p.agent.color}">${
+            p.agent.initials
+          }</div>
+            <div>
+              <div class="agent-name">${p.agent.name}</div>
+              <div class="agent-agency">${p.agent.agency}</div>
+            </div>
+          </div>
+        </div>`;
+          container.appendChild(card);
+        });
+
+        renderMapSideList();
+      }
+
+      function renderMapSideList() {
+        const list = document.getElementById("mapSideList");
+        list.innerHTML = "";
+        PROPERTIES.forEach((p, i) => {
+          const card = document.createElement("div");
+          card.className = "map-mini-card" + (i === 0 ? " active" : "");
+          card.innerHTML = `
+        <div class="map-mini-img"><img src="${p.img}" alt="${p.addr}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800'" /></div>
+        <div class="map-mini-body">
+          <div class="map-mini-price">${p.price}/wk</div>
+          <div class="map-mini-addr">${p.addr}</div>
+          <div class="map-mini-specs">🛏 ${p.beds} · 🛁 ${p.baths} · ${p.type}</div>
+        </div>`;
+          card.onclick = () => {
+            document
+              .querySelectorAll(".map-mini-card")
+              .forEach((c) => c.classList.remove("active"));
+            card.classList.add("active");
+          };
+          list.appendChild(card);
+        });
+      }
+
+      // ─── VIEW TOGGLE ───
+      function setView(view) {
+        currentView = view;
+        const container = document.getElementById("cardContainer");
+        const mapView = document.getElementById("mapView");
+        const paginWrap = document.getElementById("paginationWrap");
+
+        document
+          .getElementById("gridBtn")
+          .classList.toggle("active", view === "grid");
+        document
+          .getElementById("listBtn")
+          .classList.toggle("active", view === "list");
+        document
+          .getElementById("mapBtn")
+          .classList.toggle("active", view === "map");
+
+        if (view === "map") {
+          container.style.display = "none";
+          mapView.classList.add("active");
+          paginWrap.style.display = "none";
+        } else {
+          container.style.display = "";
+          mapView.classList.remove("active");
+          paginWrap.style.display = "";
+          container.className = view === "grid" ? "cards-grid" : "cards-list";
+        }
+      }
+
+      // ─── SAVE / FAVOURITE ───
+      function toggleSave(e, id) {
+        e.stopPropagation();
+        const btn = e.currentTarget;
+        if (savedProps.has(id)) {
+          savedProps.delete(id);
+          btn.textContent = "🤍";
+          btn.classList.remove("saved");
+          showToast("💔 Removed from saved properties");
+        } else {
+          savedProps.add(id);
+          btn.textContent = "❤️";
+          btn.classList.add("saved");
+          showToast("❤️ Property saved! Log in to access your saved list.");
+        }
+      }
+
+      // ─── INSPECT ───
+      function openInspect(addr) {
+        document.getElementById("inspectAddr").textContent = addr;
+        document
+          .querySelectorAll(".time-slot")
+          .forEach((s) => s.classList.remove("selected"));
+        openModal("inspectModal");
+      }
+      function selectSlot(el) {
+        document
+          .querySelectorAll(".time-slot")
+          .forEach((s) => s.classList.remove("selected"));
+        el.classList.add("selected");
+      }
+      function confirmBooking() {
+        const selected = document.querySelector(".time-slot.selected");
+        const addr = document.getElementById("inspectAddr").textContent;
+        closeModal("inspectModal");
+        showToast(
+          `✅ Inspection booked at ${addr}${
+            selected ? " — " + selected.textContent.trim() : ""
+          }`
+        );
+      }
+
+      // ─── APPLY ───
+      function applyNow(addr) {
+        showToast(
+          "📋 Application started for " +
+            addr +
+            ". Check your email to continue."
+        );
+      }
+
+      // ─── AUTH ───
+      function openAuthModal(tab) {
+        switchTab(tab);
+        openModal("authModal");
+      }
+      function switchTab(tab) {
+        document
+          .getElementById("loginTab")
+          .classList.toggle("active", tab === "login");
+        document
+          .getElementById("registerTab")
+          .classList.toggle("active", tab === "register");
+        document.getElementById("loginForm").style.display =
+          tab === "login" ? "" : "none";
+        document.getElementById("registerForm").style.display =
+          tab === "register" ? "" : "none";
+      }
+
+      // ─── MODALS ───
+      function openModal(id) {
+        document.getElementById(id).classList.add("open");
+      }
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("open");
+      }
+      document.querySelectorAll(".modal-overlay").forEach((m) => {
+        m.addEventListener("click", (e) => {
+          if (e.target === m) m.classList.remove("open");
+        });
+      });
+
+      // ─── TOAST ───
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        document.getElementById("toastMsg").textContent = msg;
+        t.classList.add("show");
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.classList.remove("show"), 3500);
+      }
+
+      // ─── PAGINATION ───
+      function changePage(el) {
+        document
+          .querySelectorAll(".page-btn")
+          .forEach((b) => b.classList.remove("active"));
+        el.classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function nextPage() {
+        const active = document.querySelector(".page-btn.active");
+        const next = active?.nextElementSibling;
+        if (next && !next.classList.contains("dots")) {
+          active.classList.remove("active");
+          next.classList.add("active");
+        }
+      }
+
+      // ─── LOAD MORE ───
+      function loadMore() {
+        showToast("⬇️ Loading more properties…");
+        document.getElementById("resultsCount").textContent =
+          "Showing 12 of 48 properties";
+      }
+
+      // ─── SEARCH ───
+      function runSearch() {
+        showToast("🔍 Searching for properties…");
+      }
+
+      // ─── FILTER HELPERS ───
+      function updateRangeLabel(val) {
+        document.getElementById("rangeVal").textContent =
+          "$" + parseInt(val).toLocaleString();
+      }
+      function selectBed(el) {
+        const group = el.parentElement;
+        group
+          .querySelectorAll(".bed-btn")
+          .forEach((b) => b.classList.remove("active"));
+        el.classList.add("active");
+      }
+      function togglePill(el, onLabel, offLabel) {
+        el.classList.toggle("active");
+      }
+      function cycleBeds(el) {
+        const opts = ["Any Beds", "1+ Beds", "2+ Beds", "3+ Beds", "4+ Beds"];
+        const cur = opts.indexOf(el.textContent.replace("🛏 ", "").trim());
+        const next = (cur + 1) % opts.length;
+        el.textContent = "🛏 " + opts[next];
+        el.classList.toggle("active", next > 0);
+      }
+      function clearAllFilters() {
+        showToast("🗑 All filters cleared");
+      }
+
+      // ─── SUBURB AUTOCOMPLETE ───
+      const SUBURBS = [
+        { name: "Perth CBD", postcode: "6000" },
+        { name: "Subiaco", postcode: "6008" },
+        { name: "South Perth", postcode: "6151" },
+        { name: "Fremantle", postcode: "6160" },
+        { name: "Cottesloe", postcode: "6011" },
+        { name: "Nedlands", postcode: "6009" },
+        { name: "Leederville", postcode: "6007" },
+        { name: "West Perth", postcode: "6005" },
+        { name: "Highgate", postcode: "6003" },
+        { name: "Mount Lawley", postcode: "6050" },
+        { name: "Victoria Park", postcode: "6100" },
+        { name: "Claremont", postcode: "6010" },
+        { name: "Applecross", postcode: "6153" },
+        { name: "Canning Vale", postcode: "6155" },
+        { name: "Joondalup", postcode: "6027" },
+        { name: "Rockingham", postcode: "6168" },
+        { name: "Mandurah", postcode: "6210" },
+        { name: "Scarborough", postcode: "6019" },
+        { name: "Northbridge", postcode: "6003" },
+        { name: "East Perth", postcode: "6004" },
+        { name: "Bayswater", postcode: "6053" },
+        { name: "Innaloo", postcode: "6018" },
+        { name: "Floreat", postcode: "6014" },
+        { name: "Wembley", postcode: "6014" },
+        { name: "Karrinyup", postcode: "6018" },
+      ];
+
+      let suburbHideTimer = null;
+
+      function filterSuburbs(val) {
+        const dropdown = document.getElementById("suburbDropdown");
+        const q = val.trim().toLowerCase();
+        if (!q) {
+          dropdown.style.display = "none";
+          return;
+        }
+
+        const matches = SUBURBS.filter(
+          (s) => s.name.toLowerCase().includes(q) || s.postcode.includes(q)
+        ).slice(0, 6);
+
+        if (!matches.length) {
+          dropdown.style.display = "none";
+          return;
+        }
+
+        dropdown.innerHTML = matches
+          .map(
+            (s) => `
+      <div class="suburb-option" onmousedown="selectSuburb('${s.name}', '${s.postcode}')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:var(--text-muted)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div>
+          <span class="suburb-option-name">${s.name}</span>
+          <span class="suburb-option-post">WA ${s.postcode}</span>
+        </div>
+      </div>`
+          )
+          .join("");
+
+        dropdown.style.display = "block";
+      }
+
+      function showSuburbDropdown() {
+        clearTimeout(suburbHideTimer);
+        const val = document.getElementById("suburbInput").value;
+        if (val.trim()) filterSuburbs(val);
+      }
+
+      function hideSuburbDropdown() {
+        suburbHideTimer = setTimeout(() => {
+          document.getElementById("suburbDropdown").style.display = "none";
+        }, 150);
+      }
+
+      function selectSuburb(name, postcode) {
+        document.getElementById("suburbInput").value = name + " " + postcode;
+        document.getElementById("suburbDropdown").style.display = "none";
+        showToast("📍 Searching in " + name + " WA " + postcode);
+      }
+
+      // ─── INIT ───
+      renderCards();
+    </script>
+  </body>
+</html>
